@@ -199,6 +199,10 @@ html, body {
   color: #4cc9f0;
 }
 
+.shield-badge.hidden {
+  display: none !important;
+}
+
 /* Painel de Onda Superior Central */
 .hud-wave-center {
   top: 20px;
@@ -657,59 +661,102 @@ html, body {
 }
 
 /* ==========================================================================
-   TELA DE SELEÇÃO DE VEÍCULO, ARMA E MAPA
+   TELA DE SELEÇÃO DE VEÍCULO, ARMA E MAPA (LAYOUT SHOWROOM 3D DESOBSTRUÍDO)
    ========================================================================== */
 
-.select-container {
-  width: 92%;
-  max-width: 1100px;
-  background: rgba(10, 14, 26, 0.94);
-  border: 1px solid var(--border-glow);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-  border-radius: 12px;
-  padding: 24px;
-  max-height: 92vh;
-  overflow-y: auto;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+.select-showroom-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 28px;
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 10;
 }
 
-.section-heading {
+.select-header {
+  text-align: center;
+  pointer-events: auto;
+  margin-bottom: 6px;
+}
+
+.select-header-title {
   font-family: var(--font-display);
   font-size: 24px;
   font-weight: 900;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   color: var(--accent-cyan);
-  text-align: center;
-  margin-bottom: 20px;
-  text-shadow: 0 0 12px rgba(0, 243, 255, 0.5);
+  text-shadow: 0 0 16px rgba(0, 243, 255, 0.6);
 }
 
-.selection-section {
-  margin-bottom: 22px;
+.select-header-sub {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-top: 3px;
 }
 
-.step-title {
-  font-size: 14px;
+/* Layout em 3 Colunas: Esquerda (Opções) | Centro (3D Livre) | Direita (Especificações) */
+.select-main-layout {
+  display: grid;
+  grid-template-columns: 290px 1fr 310px;
+  gap: 20px;
+  flex: 1;
+  min-height: 0;
+  align-items: stretch;
+  pointer-events: none;
+}
+
+/* Coluna Lateral Esquerda: Seletores de Veículo, Arma e Mapa */
+.select-sidebar-left {
+  pointer-events: auto;
+  background: rgba(10, 14, 26, 0.88);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 14px 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.75), inset 0 0 12px rgba(0, 243, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: calc(100vh - 150px);
+}
+
+.sidebar-section-title {
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.5px;
   color: var(--text-muted);
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 6px;
+  padding-bottom: 4px;
 }
 
-.cards-grid {
+.cards-grid-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cards-grid-compact {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 6px;
 }
 
+/* Cartões de Seleção Interativos */
 .selection-card {
   background: var(--bg-card);
   border: 2px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  padding: 14px;
+  border-radius: 6px;
+  padding: 8px 10px;
   cursor: pointer;
   position: relative;
   transition: all 0.2s ease;
@@ -719,24 +766,24 @@ html, body {
 
 .selection-card:hover {
   border-color: rgba(0, 243, 255, 0.6);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 243, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 243, 255, 0.2);
 }
 
 .selection-card.selected {
   border-color: var(--accent-cyan);
-  background: rgba(0, 243, 255, 0.08);
-  box-shadow: 0 0 25px rgba(0, 243, 255, 0.35);
+  background: rgba(0, 243, 255, 0.12);
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.35);
 }
 
 .card-badge {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: 1px;
-  padding: 3px 8px;
+  padding: 2px 6px;
   border-radius: 4px;
   align-self: flex-start;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .badge-bal { background: rgba(0, 243, 255, 0.2); color: var(--accent-cyan); }
@@ -745,18 +792,131 @@ html, body {
 
 .card-title {
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 1px;
   color: #fff;
-  margin-bottom: 10px;
+  margin: 0;
 }
 
-.card-stats {
+.card-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Centro: Espaço Totalmente Desobstruído para o Veículo 3D */
+.select-center-viewport {
+  pointer-events: none;
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  margin-bottom: 10px;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 12px;
+}
+
+.viewport-vehicle-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(10, 14, 26, 0.65);
+  border: 1px solid rgba(0, 243, 255, 0.35);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--accent-cyan);
+  text-shadow: 0 0 10px rgba(0, 243, 255, 0.6);
+  pointer-events: none;
+}
+
+.indicator-ring {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 8px var(--accent-cyan);
+  animation: pulseIndicator 1.8s infinite;
+}
+
+@keyframes pulseIndicator {
+  0% { transform: scale(0.9); opacity: 0.6; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.6; }
+}
+
+/* Coluna Lateral Direita: Informações e Estatísticas do Veículo */
+.select-sidebar-right {
+  pointer-events: auto;
+  background: rgba(10, 14, 26, 0.88);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 16px 18px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.75), inset 0 0 12px rgba(0, 243, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: calc(100vh - 150px);
+}
+
+.vehicle-info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+}
+
+.info-vehicle-name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #fff;
+  margin: 6px 0 2px 0;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+.info-vehicle-ref {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--accent-cyan);
+}
+
+.info-desc-box {
+  background: rgba(255, 255, 255, 0.04);
+  border-left: 3px solid var(--accent-cyan);
+  padding: 8px 10px;
+  border-radius: 0 6px 6px 0;
+}
+
+.info-desc-box p {
+  font-size: 11px;
+  line-height: 1.45;
+  color: #ddd;
+  margin: 0;
+}
+
+.stats-group-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.info-stats-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .stat-row {
@@ -772,7 +932,7 @@ html, body {
 }
 
 .stat-bar {
-  width: 90px;
+  width: 100px;
   height: 6px;
   background: rgba(255, 255, 255, 0.15);
   border-radius: 3px;
@@ -782,22 +942,48 @@ html, body {
 .stat-bar div {
   height: 100%;
   background: var(--accent-cyan);
+  transition: width 0.3s ease;
 }
 
-.card-desc {
-  font-size: 11px;
-  line-height: 1.4;
+.info-weapon-box {
+  background: rgba(0, 243, 255, 0.06);
+  border: 1px solid rgba(0, 243, 255, 0.25);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.weapon-mount-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--accent-cyan);
+  margin-bottom: 4px;
+}
+
+.weapon-mount-name {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.weapon-mount-desc {
+  font-size: 10px;
   color: var(--text-muted);
-  margin-top: auto;
+  line-height: 1.35;
 }
 
-.select-actions {
+/* Barra Inferior: Ações */
+.select-footer {
+  pointer-events: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
-  padding-top: 15px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 8px;
+  margin-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 /* ==========================================================================

@@ -273,13 +273,65 @@ const ENEMY_TYPES = {
   }
 };
 
+// Especificações Visuais e Atributos dos Veículos Jogáveis
+const VEHICLE_DATA = {
+  interceptor: {
+    displayName: 'INFILTRADOR',
+    subtitle: 'Aston Martin DB5',
+    badge: 'ESPORTIVO CLÁSSICO',
+    badgeClass: 'badge-bal',
+    description: 'Esportivo clássico prateado, inspirado no Aston Martin DB5.',
+    modelRef: 'Inspirado no Aston Martin DB5 prateado',
+    speedPct: '70%',
+    agilityPct: '75%',
+    armorPct: '60%',
+    weaponNotes: {
+      machinegun: 'Duas metralhadoras embutidas nos paralamas dianteiros.',
+      shotgun: 'Canhão frontal de dispersão integrado à grade cromada.',
+      cannon: 'Canhão pesado montado sobre o teto da cabine.'
+    }
+  },
+  raptor: {
+    displayName: 'VELOZ',
+    subtitle: 'Lamborghini Aventador',
+    badge: 'SUPERCARRO & AEROFÓLIO',
+    badgeClass: 'badge-spd',
+    description: 'Supercarro vermelho-alaranjado, baixo e agressivo, com aerofólio traseiro.',
+    modelRef: 'Inspirado no Lamborghini Aventador vermelho-alaranjado',
+    speedPct: '95%',
+    agilityPct: '95%',
+    armorPct: '45%',
+    weaponNotes: {
+      machinegun: 'Metralhadoras duplas aerodinâmicas nos paralamas dianteiros.',
+      shotgun: 'Canhão frontal integrado ao bico angular em cunha.',
+      cannon: 'Canhão pesado montado sobre o teto baixo aerodinâmico.'
+    }
+  },
+  titan: {
+    displayName: 'TITAN',
+    subtitle: 'Ford F-150',
+    badge: 'PICAPE ROBUSTA',
+    badgeClass: 'badge-arm',
+    description: 'Picape azul-marinho robusta, inspirada na Ford F-150.',
+    modelRef: 'Inspirada na Ford F-150 azul-marinho',
+    speedPct: '55%',
+    agilityPct: '50%',
+    armorPct: '95%',
+    weaponNotes: {
+      machinegun: 'Metralhadoras reforçadas sobre os paralamas dianteiros.',
+      shotgun: 'Canhão frontal maciço acoplado na grade cromada.',
+      cannon: 'Canhão pesado de artilharia montado no teto da cabine.'
+    }
+  }
+};
+
 // Armas do Jogador
 const PLAYER_WEAPONS = {
   machinegun: {
     name: 'Metralhadora',
     fireRate: 8.0, // 8 tiros por segundo obrigatório
-    damage: 20,    // 20 de dano obrigatório
-    range: 165.0,
+    damage: 60,    // 60 de dano por tiro (triplicado)
+    range: 330.0,  // 330.0 de alcance (dobrado de 165.0)
     speed: 150.0,
     color: [1.0, 0.9, 0.15],
     size: 0.28
@@ -287,10 +339,10 @@ const PLAYER_WEAPONS = {
   shotgun: {
     name: 'Dispersora',
     fireRate: 2.4,
-    damage: 50,    // 50 de dano por projétil obrigatório
+    damage: 150,   // 150 de dano por projétil (triplicado)
     pellets: 3,    // Exatamente 3 balas obrigatório
     spreadAngles: [-0.045, 0.0, 0.045], // Ângulos precisos do leque da Dispersora
-    range: 92.0,   // Alcance moderado estendido
+    range: 184.0,  // 184.0 de alcance (dobrado de 92.0)
     speed: 120.0,
     color: [0.0, 0.95, 1.0],
     size: 0.32
@@ -298,8 +350,8 @@ const PLAYER_WEAPONS = {
   cannon: {
     name: 'Canhão Pesado',
     fireRate: 1.2, // Cadência menor que a metralhadora
-    damage: 150,   // 150 de dano obrigatório
-    range: 220.0,
+    damage: 450,   // 450 de dano por tiro (triplicado)
+    range: 440.0,  // 440.0 de alcance (dobrado de 220.0)
     speed: 125.0,
     color: [1.0, 0.25, 0.05],
     size: 0.75
@@ -835,49 +887,327 @@ const VoxelBuilder = {
     m.add(cx + (cx > 0 ? 0.04 : -0.04), cy, cz, 0.08, radius * 1.2, radius * 1.2, 0.75, 0.78, 0.82, 1.0, 'wheel');
   },
 
-  /* ================= JOGADOR ================= */
-  buildInterceptor(renderer) {
+  /* ================= JOGADOR (MODELOS INSPIRADOS EM CARROS REAIS) ================= */
+
+  // Anexa as armas na geometria do veículo com simetria, alinhamento e precisão anatômica
+  addWeaponToVehicle(m, vehicleType, weaponType = 'machinegun') {
+    const gunMetal = [0.22, 0.24, 0.28];
+    const darkSteel = [0.15, 0.16, 0.18];
+    const barrelTip = [0.35, 0.38, 0.42];
+    const energyGlow = [0.0, 0.92, 1.0];
+    const heavyDark = [0.12, 0.13, 0.15];
+
+    if (weaponType === 'machinegun') {
+      // Metralhadora: Duas armas simétricas nos paralamas dianteiros apontadas para a frente (+Z)
+      if (vehicleType === 'interceptor') {
+        const fenderX = 0.74, fenderY = 0.58, fenderZ = 1.15;
+        m.add(-fenderX, fenderY, fenderZ, 0.16, 0.14, 1.30, gunMetal[0], gunMetal[1], gunMetal[2], 1.0, 'weapon');
+        m.add(fenderX, fenderY, fenderZ, 0.16, 0.14, 1.30, gunMetal[0], gunMetal[1], gunMetal[2], 1.0, 'weapon');
+        m.add(-fenderX, fenderY, fenderZ + 0.72, 0.18, 0.16, 0.18, barrelTip[0], barrelTip[1], barrelTip[2], 1.0, 'weapon');
+        m.add(fenderX, fenderY, fenderZ + 0.72, 0.18, 0.16, 0.18, barrelTip[0], barrelTip[1], barrelTip[2], 1.0, 'weapon');
+      } else if (vehicleType === 'raptor') {
+        const fenderX = 0.82, fenderY = 0.48, fenderZ = 1.18;
+        m.add(-fenderX, fenderY, fenderZ, 0.15, 0.13, 1.35, gunMetal[0], gunMetal[1], gunMetal[2], 1.0, 'weapon');
+        m.add(fenderX, fenderY, fenderZ, 0.15, 0.13, 1.35, gunMetal[0], gunMetal[1], gunMetal[2], 1.0, 'weapon');
+        m.add(-fenderX, fenderY, fenderZ + 0.74, 0.17, 0.15, 0.16, barrelTip[0], barrelTip[1], barrelTip[2], 1.0, 'weapon');
+        m.add(fenderX, fenderY, fenderZ + 0.74, 0.17, 0.15, 0.16, barrelTip[0], barrelTip[1], barrelTip[2], 1.0, 'weapon');
+      } else { // titan
+        const fenderX = 0.98, fenderY = 0.96, fenderZ = 1.25;
+        m.add(-fenderX, fenderY, fenderZ, 0.20, 0.18, 1.45, gunMetal[0], gunMetal[1], gunMetal[2], 1.0, 'weapon');
+        m.add(fenderX, fenderY, fenderZ, 0.20, 0.18, 1.45, gunMetal[0], gunMetal[1], gunMetal[2], 1.0, 'weapon');
+        m.add(-fenderX, fenderY, fenderZ + 0.78, 0.22, 0.20, 0.18, barrelTip[0], barrelTip[1], barrelTip[2], 1.0, 'weapon');
+        m.add(fenderX, fenderY, fenderZ + 0.78, 0.22, 0.20, 0.18, barrelTip[0], barrelTip[1], barrelTip[2], 1.0, 'weapon');
+      }
+
+    } else if (weaponType === 'shotgun') {
+      // Dispersora: Um único canhão na parte frontal do veículo, alinhado ao centro e conectado à grade/para-choque
+      if (vehicleType === 'interceptor') {
+        m.add(0, 0.44, 1.75, 0.48, 0.32, 0.55, gunMetal[0], gunMetal[1], gunMetal[2], 1.0, 'weapon');
+        m.add(0, 0.44, 2.12, 0.38, 0.26, 0.40, barrelTip[0], barrelTip[1], barrelTip[2], 1.0, 'weapon');
+        m.add(0, 0.44, 2.34, 0.42, 0.30, 0.10, energyGlow[0], energyGlow[1], energyGlow[2], 1.0, 'weapon');
+      } else if (vehicleType === 'raptor') {
+        m.add(0, 0.36, 1.82, 0.46, 0.28, 0.52, gunMetal[0], gunMetal[1], gunMetal[2], 1.0, 'weapon');
+        m.add(0, 0.36, 2.18, 0.36, 0.22, 0.38, barrelTip[0], barrelTip[1], barrelTip[2], 1.0, 'weapon');
+        m.add(0, 0.36, 2.39, 0.40, 0.26, 0.08, energyGlow[0], energyGlow[1], energyGlow[2], 1.0, 'weapon');
+      } else { // titan
+        m.add(0, 0.74, 2.02, 0.58, 0.38, 0.58, gunMetal[0], gunMetal[1], gunMetal[2], 1.0, 'weapon');
+        m.add(0, 0.74, 2.42, 0.46, 0.32, 0.42, barrelTip[0], barrelTip[1], barrelTip[2], 1.0, 'weapon');
+        m.add(0, 0.74, 2.65, 0.50, 0.36, 0.10, energyGlow[0], energyGlow[1], energyGlow[2], 1.0, 'weapon');
+      }
+
+    } else if (weaponType === 'cannon') {
+      // Canhão Pesado: Um único canhão montado sobre o topo do veículo, preso à carroceria e acompanhando a movimentação
+      if (vehicleType === 'interceptor') {
+        m.add(0, 0.96, -0.15, 0.72, 0.18, 0.85, darkSteel[0], darkSteel[1], darkSteel[2], 1.0, 'weapon');
+        m.add(0, 1.08, 0.75, 0.30, 0.30, 2.10, heavyDark[0], heavyDark[1], heavyDark[2], 1.0, 'weapon');
+        m.add(0, 1.08, 1.88, 0.44, 0.44, 0.26, barrelTip[0], barrelTip[1], barrelTip[2], 1.0, 'weapon');
+      } else if (vehicleType === 'raptor') {
+        m.add(0, 0.84, -0.15, 0.68, 0.16, 0.80, darkSteel[0], darkSteel[1], darkSteel[2], 1.0, 'weapon');
+        m.add(0, 0.95, 0.68, 0.28, 0.26, 2.05, heavyDark[0], heavyDark[1], heavyDark[2], 1.0, 'weapon');
+        m.add(0, 0.95, 1.78, 0.40, 0.38, 0.24, barrelTip[0], barrelTip[1], barrelTip[2], 1.0, 'weapon');
+      } else { // titan
+        m.add(0, 1.58, 0.15, 0.95, 0.22, 0.95, darkSteel[0], darkSteel[1], darkSteel[2], 1.0, 'weapon');
+        m.add(0, 1.74, 0.95, 0.38, 0.38, 2.45, heavyDark[0], heavyDark[1], heavyDark[2], 1.0, 'weapon');
+        m.add(0, 1.74, 2.24, 0.52, 0.52, 0.30, barrelTip[0], barrelTip[1], barrelTip[2], 1.0, 'weapon');
+      }
+    }
+  },
+
+  // Infiltrador: Esportivo clássico prateado inspirado no Aston Martin DB5
+  buildInterceptor(renderer, weaponType = 'machinegun') {
     const m = this.createModelDef();
-    m.add(0, 0.4, 0, 1.4, 0.35, 3.2, 0.12, 0.55, 0.85, 1.0, 'chassis');
-    m.add(0, 0.4, 1.6, 1.1, 0.3, 0.8, 0.1, 0.45, 0.7, 1.0, 'chassis');
-    m.add(0, 0.75, 0.2, 0.9, 0.4, 1.4, 0.0, 0.95, 1.0, 0.85, 'glass');
-    m.add(-1.2, 0.35, -0.4, 1.1, 0.15, 1.8, 0.08, 0.4, 0.7, 1.0, 'wing');
-    m.add(1.2, 0.35, -0.4, 1.1, 0.15, 1.8, 0.08, 0.4, 0.7, 1.0, 'wing');
-    // Canhões nas Asas
-    m.add(-1.4, 0.4, 0.4, 0.22, 0.22, 1.4, 0.25, 0.28, 0.32, 1.0, 'weapon');
-    m.add(1.4, 0.4, 0.4, 0.22, 0.22, 1.4, 0.25, 0.28, 0.32, 1.0, 'weapon');
-    // Turbinas Traseiras
-    m.add(-0.45, 0.4, -1.7, 0.4, 0.4, 0.4, 0.15, 0.18, 0.22, 1.0, 'engine');
-    m.add(0.45, 0.4, -1.7, 0.4, 0.4, 0.4, 0.15, 0.18, 0.22, 1.0, 'engine');
-    m.add(-0.45, 0.4, -1.92, 0.25, 0.25, 0.1, 0.0, 0.95, 1.0, 1.0, 'glow');
-    m.add(0.45, 0.4, -1.92, 0.25, 0.25, 0.1, 0.0, 0.95, 1.0, 1.0, 'glow');
-    m.add(0, 0.95, -1.4, 1.4, 0.1, 0.4, 0.08, 0.4, 0.7, 1.0, 'spoiler');
+    
+    // Cores Aston Martin DB5 Silver Birch
+    const silver = [0.77, 0.80, 0.83];
+    const silverHighlight = [0.85, 0.88, 0.91];
+    const silverDark = [0.65, 0.68, 0.72];
+    const chrome = [0.88, 0.90, 0.94];
+    const glass = [0.55, 0.78, 0.82, 0.85];
+    const interior = [0.22, 0.16, 0.12];
+    const lights = [1.0, 1.0, 0.92];
+    const tailLights = [0.92, 0.12, 0.12];
+    const darkGrille = [0.20, 0.22, 0.25];
+
+    // 1. Chassi e assoalho inferior
+    m.add(0, 0.26, 0, 1.45, 0.16, 3.4, 0.15, 0.15, 0.18, 1.0, 'chassis');
+
+    // 2. 4 Rodas clássicas com aros metálicos e pneus de borracha
+    this.addWheel(m, -0.86, 0.35, 1.05, 0.36, 0.25);
+    this.addWheel(m, 0.86, 0.35, 1.05, 0.36, 0.25);
+    this.addWheel(m, -0.86, 0.35, -1.05, 0.36, 0.25);
+    this.addWheel(m, 0.86, 0.35, -1.05, 0.36, 0.25);
+
+    // 3. Carroceria principal inferior (prateada)
+    m.add(0, 0.44, 0, 1.62, 0.28, 3.5, silver[0], silver[1], silver[2], 1.0, 'body');
+
+    // 4. Paralamas clássicos contornando as rodas
+    m.add(-0.84, 0.44, 1.05, 0.14, 0.26, 1.1, silver[0], silver[1], silver[2], 1.0, 'fender');
+    m.add(0.84, 0.44, 1.05, 0.14, 0.26, 1.1, silver[0], silver[1], silver[2], 1.0, 'fender');
+    m.add(-0.84, 0.44, -1.05, 0.14, 0.26, 1.1, silver[0], silver[1], silver[2], 1.0, 'fender');
+    m.add(0.84, 0.44, -1.05, 0.14, 0.26, 1.1, silver[0], silver[1], silver[2], 1.0, 'fender');
+
+    // 5. Saídas de ar laterais cromadas clássicas do DB5 (side strakes nos paralamas)
+    m.add(-0.86, 0.48, 0.45, 0.08, 0.08, 0.35, chrome[0], chrome[1], chrome[2], 1.0, 'trim');
+    m.add(0.86, 0.48, 0.45, 0.08, 0.08, 0.35, chrome[0], chrome[1], chrome[2], 1.0, 'trim');
+
+    // 6. Capô alongado clássico do DB5
+    m.add(0, 0.54, 1.0, 1.48, 0.16, 1.6, silverHighlight[0], silverHighlight[1], silverHighlight[2], 1.0, 'hood');
+    // Entrada de ar central no capô (hood scoop)
+    m.add(0, 0.63, 1.05, 0.35, 0.06, 0.55, silverDark[0], silverDark[1], silverDark[2], 1.0, 'scoop');
+
+    // 7. Dianteira arredondada clássica com grade em arco
+    m.add(0, 0.48, 1.82, 1.40, 0.24, 0.25, silver[0], silver[1], silver[2], 1.0, 'nose');
+    // Grade cromada DB5 com aletas escuras
+    m.add(0, 0.44, 1.95, 0.75, 0.24, 0.08, chrome[0], chrome[1], chrome[2], 1.0, 'grille_frame');
+    m.add(0, 0.44, 1.97, 0.65, 0.18, 0.06, darkGrille[0], darkGrille[1], darkGrille[2], 1.0, 'grille');
+    // Faróis redondos clássicos salientes com aros cromados
+    m.add(-0.58, 0.50, 1.92, 0.25, 0.22, 0.12, chrome[0], chrome[1], chrome[2], 1.0, 'light_rim');
+    m.add(0.58, 0.50, 1.92, 0.25, 0.22, 0.12, chrome[0], chrome[1], chrome[2], 1.0, 'light_rim');
+    m.add(-0.58, 0.50, 1.97, 0.18, 0.18, 0.06, lights[0], lights[1], lights[2], 1.0, 'light');
+    m.add(0.58, 0.50, 1.97, 0.18, 0.18, 0.06, lights[0], lights[1], lights[2], 1.0, 'light');
+    // Para-choque dianteiro cromado com batentes verticais
+    m.add(0, 0.34, 1.98, 1.55, 0.12, 0.16, chrome[0], chrome[1], chrome[2], 1.0, 'bumper');
+    m.add(-0.45, 0.36, 2.04, 0.10, 0.20, 0.08, chrome[0], chrome[1], chrome[2], 1.0, 'bumper_rider');
+    m.add(0.45, 0.36, 2.04, 0.10, 0.20, 0.08, chrome[0], chrome[1], chrome[2], 1.0, 'bumper_rider');
+
+    // 8. Cabine compacta recuada com para-brisa inclinado
+    m.add(0, 0.68, -0.25, 1.25, 0.32, 1.45, interior[0], interior[1], interior[2], 1.0, 'cabin');
+    // Para-brisa dianteiro inclinado com moldura cromada
+    m.add(0, 0.72, 0.35, 1.20, 0.34, 0.18, glass[0], glass[1], glass[2], glass[3], 'windshield');
+    // Teto baixo arredondado prateado
+    m.add(0, 0.87, -0.30, 1.15, 0.08, 1.25, silverHighlight[0], silverHighlight[1], silverHighlight[2], 1.0, 'roof');
+    // Vidros laterais
+    m.add(-0.62, 0.72, -0.30, 0.06, 0.26, 1.10, glass[0], glass[1], glass[2], glass[3], 'side_window');
+    m.add(0.62, 0.72, -0.30, 0.06, 0.26, 1.10, glass[0], glass[1], glass[2], glass[3], 'side_window');
+    // Vidro traseiro fastback suave
+    m.add(0, 0.72, -0.92, 1.12, 0.28, 0.18, glass[0], glass[1], glass[2], glass[3], 'rear_window');
+
+    // 9. Traseira curta fastback clássica
+    m.add(0, 0.52, -1.35, 1.50, 0.24, 0.85, silver[0], silver[1], silver[2], 1.0, 'trunk');
+    // Lanternas traseiras verticais clássicas
+    m.add(-0.62, 0.50, -1.76, 0.14, 0.20, 0.06, tailLights[0], tailLights[1], tailLights[2], 1.0, 'taillight');
+    m.add(0.62, 0.50, -1.76, 0.14, 0.20, 0.06, tailLights[0], tailLights[1], tailLights[2], 1.0, 'taillight');
+    // Para-choque traseiro cromado
+    m.add(0, 0.35, -1.78, 1.52, 0.12, 0.14, chrome[0], chrome[1], chrome[2], 1.0, 'rear_bumper');
+    // Escapamentos duplos cromados
+    m.add(-0.35, 0.25, -1.82, 0.10, 0.10, 0.22, chrome[0], chrome[1], chrome[2], 1.0, 'exhaust');
+    m.add(0.35, 0.25, -1.82, 0.10, 0.10, 0.22, chrome[0], chrome[1], chrome[2], 1.0, 'exhaust');
+
+    // 10. Adiciona arma montada
+    this.addWeaponToVehicle(m, 'interceptor', weaponType);
+
     return m.bake(renderer);
   },
 
-  buildRaptorPlayer(renderer) {
+  // Veloz: Supercarro vermelho-alaranjado, baixo e agressivo, com aerofólio traseiro inspirado no Lamborghini Aventador
+  buildRaptorPlayer(renderer, weaponType = 'machinegun') {
     const m = this.createModelDef();
-    m.add(0, 0.32, 0, 1.1, 0.28, 3.4, 0.98, 0.45, 0.05, 1.0, 'chassis');
-    m.add(0, 0.32, 1.8, 0.6, 0.22, 1.0, 1.0, 0.75, 0.0, 1.0, 'chassis');
-    m.add(0, 0.6, 0.1, 0.7, 0.3, 1.2, 0.2, 0.1, 0.3, 0.9, 'glass');
-    m.add(-1.4, 0.35, 0.2, 0.2, 0.2, 1.4, 0.3, 0.3, 0.35, 1.0, 'weapon');
-    m.add(1.4, 0.35, 0.2, 0.2, 0.2, 1.4, 0.3, 0.3, 0.35, 1.0, 'weapon');
-    m.add(-0.6, 0.75, -1.2, 0.1, 0.6, 0.8, 1.0, 0.75, 0.0, 1.0, 'spoiler');
-    m.add(0.6, 0.75, -1.2, 0.1, 0.6, 0.8, 1.0, 0.75, 0.0, 1.0, 'spoiler');
-    m.add(0, 0.35, -1.8, 0.5, 0.5, 0.5, 0.15, 0.15, 0.18, 1.0, 'engine');
-    m.add(0, 0.35, -2.06, 0.35, 0.35, 0.1, 1.0, 0.5, 0.0, 1.0, 'glow');
+
+    // Cores Lamborghini Aventador (Arancio Argos)
+    const orange = [0.95, 0.26, 0.04];
+    const orangeHighlight = [1.0, 0.38, 0.08];
+    const orangeDark = [0.76, 0.18, 0.02];
+    const carbon = [0.10, 0.10, 0.12];
+    const glass = [0.14, 0.15, 0.20, 0.90];
+    const ledCyan = [0.15, 0.95, 1.0];
+    const tailRed = [1.0, 0.05, 0.05];
+
+    // 1. Chassi rebaixado com saias laterais em fibra de carbono
+    m.add(0, 0.22, 0, 1.65, 0.14, 3.6, carbon[0], carbon[1], carbon[2], 1.0, 'chassis');
+    m.add(-0.96, 0.24, 0, 0.18, 0.10, 3.2, carbon[0], carbon[1], carbon[2], 1.0, 'side_skirt');
+    m.add(0.96, 0.24, 0, 0.18, 0.10, 3.2, carbon[0], carbon[1], carbon[2], 1.0, 'side_skirt');
+
+    // 2. 4 Rodas esportivas de perfil baixo
+    this.addWheel(m, -0.95, 0.32, 1.18, 0.34, 0.28);
+    this.addWheel(m, 0.95, 0.32, 1.18, 0.34, 0.28);
+    this.addWheel(m, -0.98, 0.34, -1.18, 0.36, 0.32);
+    this.addWheel(m, 0.98, 0.34, -1.18, 0.36, 0.32);
+
+    // 3. Carroceria baixa, larga e angular (vermelho-alaranjada)
+    m.add(0, 0.38, 0, 1.82, 0.24, 3.5, orange[0], orange[1], orange[2], 1.0, 'body');
+
+    // 4. Dianteira em cunha (wedge shape) agressiva e pontiaguda
+    m.add(0, 0.36, 1.55, 1.62, 0.20, 1.1, orange[0], orange[1], orange[2], 1.0, 'front_wedge');
+    m.add(0, 0.33, 1.95, 1.25, 0.16, 0.55, orangeHighlight[0], orangeHighlight[1], orangeHighlight[2], 1.0, 'nose');
+    // Splitter frontal de fibra de carbono em ponta de flecha
+    m.add(0, 0.22, 2.05, 1.45, 0.08, 0.28, carbon[0], carbon[1], carbon[2], 1.0, 'splitter');
+    // Grandes entradas de ar dianteiras angulares pretas
+    m.add(-0.48, 0.32, 1.92, 0.38, 0.16, 0.18, carbon[0], carbon[1], carbon[2], 1.0, 'air_intake');
+    m.add(0.48, 0.32, 1.92, 0.38, 0.16, 0.18, carbon[0], carbon[1], carbon[2], 1.0, 'air_intake');
+    // Faróis LED angulares afilados geométricos
+    m.add(-0.55, 0.39, 1.82, 0.32, 0.08, 0.15, ledCyan[0], ledCyan[1], ledCyan[2], 1.0, 'headlight');
+    m.add(0.55, 0.39, 1.82, 0.32, 0.08, 0.15, ledCyan[0], ledCyan[1], ledCyan[2], 1.0, 'headlight');
+
+    // 5. Capô baixo com vincos angulares convergentes
+    m.add(0, 0.45, 1.15, 1.35, 0.10, 1.15, orangeHighlight[0], orangeHighlight[1], orangeHighlight[2], 1.0, 'hood');
+
+    // 6. Cabine baixa e inclinada estilo caça a jato
+    // Para-brisa extremamente inclinado quase contínuo com o capô
+    m.add(0, 0.60, 0.35, 1.15, 0.28, 0.45, glass[0], glass[1], glass[2], glass[3], 'windshield');
+    // Teto ultra-baixo com vinco aerodinâmico duplo
+    m.add(0, 0.74, -0.22, 1.05, 0.07, 0.95, orange[0], orange[1], orange[2], 1.0, 'roof');
+    // Janelas laterais afiladas pretas/fumê
+    m.add(-0.56, 0.60, -0.22, 0.06, 0.22, 0.85, glass[0], glass[1], glass[2], glass[3], 'side_glass');
+    m.add(0.56, 0.60, -0.22, 0.06, 0.22, 0.85, glass[0], glass[1], glass[2], glass[3], 'side_glass');
+
+    // 7. Entradas de ar laterais massivas estilo Aventador
+    m.add(-0.96, 0.45, -0.45, 0.22, 0.24, 0.75, carbon[0], carbon[1], carbon[2], 1.0, 'side_intake');
+    m.add(0.96, 0.45, -0.45, 0.22, 0.24, 0.75, carbon[0], carbon[1], carbon[2], 1.0, 'side_intake');
+
+    // 8. Cobertura traseira do motor V12 com lamelas pretas
+    m.add(0, 0.58, -0.85, 1.10, 0.16, 0.75, orangeDark[0], orangeDark[1], orangeDark[2], 1.0, 'engine_cover');
+    m.add(0, 0.62, -0.85, 0.85, 0.08, 0.65, carbon[0], carbon[1], carbon[2], 1.0, 'slats');
+
+    // 9. Aerofólio Traseiro de Competição (firmemente ancorado na traseira)
+    // Suportes / pilares verticais robustos presos à carroceria
+    m.add(-0.55, 0.75, -1.55, 0.10, 0.36, 0.18, carbon[0], carbon[1], carbon[2], 1.0, 'wing_mount');
+    m.add(0.55, 0.75, -1.55, 0.10, 0.36, 0.18, carbon[0], carbon[1], carbon[2], 1.0, 'wing_mount');
+    // Asa principal larga e agressiva vermelha-alaranjada
+    m.add(0, 0.94, -1.62, 1.82, 0.07, 0.38, orangeHighlight[0], orangeHighlight[1], orangeHighlight[2], 1.0, 'wing_blade');
+    // Aletas verticais aerodinâmicas nas pontas (endplates)
+    m.add(-0.92, 0.95, -1.62, 0.06, 0.18, 0.42, carbon[0], carbon[1], carbon[2], 1.0, 'wing_end');
+    m.add(0.92, 0.95, -1.62, 0.06, 0.18, 0.42, carbon[0], carbon[1], carbon[2], 1.0, 'wing_end');
+
+    // 10. Traseira agressiva: difusor duplo preto, lanternas e escapamento central
+    m.add(0, 0.42, -1.75, 1.70, 0.22, 0.22, orange[0], orange[1], orange[2], 1.0, 'rear_fascia');
+    m.add(-0.62, 0.44, -1.84, 0.32, 0.08, 0.06, tailRed[0], tailRed[1], tailRed[2], 1.0, 'taillight');
+    m.add(0.62, 0.44, -1.84, 0.32, 0.08, 0.06, tailRed[0], tailRed[1], tailRed[2], 1.0, 'taillight');
+    m.add(0, 0.26, -1.84, 1.55, 0.16, 0.20, carbon[0], carbon[1], carbon[2], 1.0, 'diffuser');
+    m.add(0, 0.38, -1.86, 0.28, 0.14, 0.10, 0.75, 0.78, 0.82, 1.0, 'exhaust');
+
+    // 11. Adiciona arma montada
+    this.addWeaponToVehicle(m, 'raptor', weaponType);
+
     return m.bake(renderer);
   },
 
-  buildTitanPlayer(renderer) {
+  // Titan: Picape robusta azul-marinho com caçamba aberta inspirada na Ford F-150
+  buildTitanPlayer(renderer, weaponType = 'machinegun') {
     const m = this.createModelDef();
-    m.add(0, 0.5, 0, 2.2, 0.55, 3.8, 0.22, 0.38, 0.25, 1.0, 'chassis');
-    m.add(0, 0.95, -0.2, 1.6, 0.45, 2.0, 0.18, 0.3, 0.2, 1.0, 'cab');
-    m.add(0, 0.4, 2.0, 2.4, 0.6, 0.5, 0.4, 0.42, 0.45, 1.0, 'bumper');
-    m.add(-1.25, 0.45, 0, 0.3, 0.5, 3.4, 0.15, 0.25, 0.16, 1.0, 'armor');
-    m.add(1.25, 0.45, 0, 0.3, 0.5, 3.4, 0.15, 0.25, 0.16, 1.0, 'armor');
-    m.add(-0.35, 1.25, 0.8, 0.25, 0.25, 2.2, 0.1, 0.1, 0.12, 1.0, 'weapon');
-    m.add(0.35, 1.25, 0.8, 0.25, 0.25, 2.2, 0.1, 0.1, 0.12, 1.0, 'weapon');
+
+    // Cores Ford F-150 (Antimatter Blue / Chrome)
+    const navyBlue = [0.06, 0.14, 0.32];
+    const navyHighlight = [0.10, 0.22, 0.46];
+    const chrome = [0.78, 0.82, 0.86];
+    const blackTrim = [0.12, 0.13, 0.15];
+    const bedliner = [0.16, 0.17, 0.19];
+    const glass = [0.18, 0.22, 0.28, 0.85];
+    const lights = [1.0, 0.96, 0.85];
+    const tailRed = [0.95, 0.10, 0.10];
+
+    // 1. Chassi elevado de longarinas de aço e suspensão todo-terreno
+    m.add(0, 0.32, 0, 1.85, 0.22, 4.0, blackTrim[0], blackTrim[1], blackTrim[2], 1.0, 'chassis');
+    // Estribos laterais resistentes
+    m.add(-1.18, 0.34, 0, 0.22, 0.08, 2.8, blackTrim[0], blackTrim[1], blackTrim[2], 1.0, 'step_bar');
+    m.add(1.18, 0.34, 0, 0.22, 0.08, 2.8, blackTrim[0], blackTrim[1], blackTrim[2], 1.0, 'step_bar');
+
+    // 2. 4 Rodas Off-Road maciças com pneus largos de todo-terreno
+    this.addWheel(m, -1.14, 0.46, 1.25, 0.46, 0.36);
+    this.addWheel(m, 1.14, 0.46, 1.25, 0.46, 0.36);
+    this.addWheel(m, -1.14, 0.46, -1.25, 0.46, 0.36);
+    this.addWheel(m, 1.14, 0.46, -1.25, 0.46, 0.36);
+
+    // 3. Carroceria volumosa e alta (azul-marinho)
+    m.add(0, 0.62, 0, 2.15, 0.42, 4.1, navyBlue[0], navyBlue[1], navyBlue[2], 1.0, 'body');
+
+    // 4. Paralamas alargados musculosos com molduras pretas
+    m.add(-1.14, 0.64, 1.25, 0.20, 0.38, 1.35, navyBlue[0], navyBlue[1], navyBlue[2], 1.0, 'fender');
+    m.add(1.14, 0.64, 1.25, 0.20, 0.38, 1.35, navyBlue[0], navyBlue[1], navyBlue[2], 1.0, 'fender');
+    m.add(-1.14, 0.64, -1.25, 0.20, 0.38, 1.35, navyBlue[0], navyBlue[1], navyBlue[2], 1.0, 'fender');
+    m.add(1.14, 0.64, -1.25, 0.20, 0.38, 1.35, navyBlue[0], navyBlue[1], navyBlue[2], 1.0, 'fender');
+
+    // 5. Dianteira imponente e quadrada de picape com capô alto e massivo
+    m.add(0, 0.88, 1.18, 1.95, 0.24, 1.45, navyHighlight[0], navyHighlight[1], navyHighlight[2], 1.0, 'hood');
+    // Grade frontal imensa em barras cromadas icônicas da F-150
+    m.add(0, 0.78, 1.96, 1.75, 0.58, 0.16, chrome[0], chrome[1], chrome[2], 1.0, 'grille_frame');
+    m.add(0, 0.78, 2.02, 1.55, 0.44, 0.08, blackTrim[0], blackTrim[1], blackTrim[2], 1.0, 'grille_mesh');
+    // Barras cromadas horizontais da grade
+    m.add(0, 0.84, 2.04, 1.58, 0.10, 0.06, chrome[0], chrome[1], chrome[2], 1.0, 'grille_bar');
+    m.add(0, 0.72, 2.04, 1.58, 0.10, 0.06, chrome[0], chrome[1], chrome[2], 1.0, 'grille_bar');
+    // Faróis verticais duplos em bloco estilo "C-clamp"
+    m.add(-0.95, 0.80, 1.98, 0.28, 0.55, 0.12, lights[0], lights[1], lights[2], 1.0, 'headlight');
+    m.add(0.95, 0.80, 1.98, 0.28, 0.55, 0.12, lights[0], lights[1], lights[2], 1.0, 'headlight');
+    // Para-choque dianteiro maciço de aço cromado com ganchos de reboque
+    m.add(0, 0.44, 2.08, 2.25, 0.38, 0.28, chrome[0], chrome[1], chrome[2], 1.0, 'front_bumper');
+    m.add(-0.65, 0.36, 2.22, 0.14, 0.14, 0.10, blackTrim[0], blackTrim[1], blackTrim[2], 1.0, 'tow_hook');
+    m.add(0.65, 0.36, 2.22, 0.14, 0.14, 0.10, blackTrim[0], blackTrim[1], blackTrim[2], 1.0, 'tow_hook');
+
+    // 6. Cabine Dupla espaçosa e quadrada com teto alto
+    m.add(0, 1.14, 0.15, 1.85, 0.65, 1.65, navyBlue[0], navyBlue[1], navyBlue[2], 1.0, 'cabin');
+    // Teto plano largo azul-marinho
+    m.add(0, 1.48, 0.15, 1.78, 0.08, 1.60, navyHighlight[0], navyHighlight[1], navyHighlight[2], 1.0, 'roof');
+    // Para-brisa amplo dianteiro
+    m.add(0, 1.20, 0.92, 1.65, 0.48, 0.20, glass[0], glass[1], glass[2], glass[3], 'windshield');
+    // Vidros laterais amplos com divisórias de porta
+    m.add(-0.94, 1.20, 0.15, 0.06, 0.42, 1.45, glass[0], glass[1], glass[2], glass[3], 'side_glass');
+    m.add(0.94, 1.20, 0.15, 0.06, 0.42, 1.45, glass[0], glass[1], glass[2], glass[3], 'side_glass');
+    // Janela traseira da cabine voltada para a caçamba
+    m.add(0, 1.22, -0.66, 1.55, 0.38, 0.08, glass[0], glass[1], glass[2], glass[3], 'rear_cab_glass');
+    // Retrovisores externos quadrados robustos de picape
+    m.add(-1.18, 1.15, 0.65, 0.22, 0.18, 0.14, blackTrim[0], blackTrim[1], blackTrim[2], 1.0, 'mirror');
+    m.add(1.18, 1.15, 0.65, 0.22, 0.18, 0.14, blackTrim[0], blackTrim[1], blackTrim[2], 1.0, 'mirror');
+
+    // 7. Caçamba Traseira (Truck Bed) claramente identificável
+    // Assoalho interno rebaixado texturizado com bedliner preto
+    m.add(0, 0.72, -1.35, 1.65, 0.08, 1.45, bedliner[0], bedliner[1], bedliner[2], 1.0, 'bed_floor');
+    // Paredes laterais altas da caçamba azul-marinho com protetores pretos no topo
+    m.add(-0.95, 0.95, -1.35, 0.26, 0.45, 1.50, navyBlue[0], navyBlue[1], navyBlue[2], 1.0, 'bed_side');
+    m.add(0.95, 0.95, -1.35, 0.26, 0.45, 1.50, navyBlue[0], navyBlue[1], navyBlue[2], 1.0, 'bed_side');
+    m.add(-0.95, 1.18, -1.35, 0.28, 0.06, 1.52, blackTrim[0], blackTrim[1], blackTrim[2], 1.0, 'bed_rail');
+    m.add(0.95, 1.18, -1.35, 0.28, 0.06, 1.52, blackTrim[0], blackTrim[1], blackTrim[2], 1.0, 'bed_rail');
+    // Tampa traseira da caçamba (tailgate) fechada com detalhes cromados
+    m.add(0, 0.94, -2.05, 1.95, 0.50, 0.14, navyBlue[0], navyBlue[1], navyBlue[2], 1.0, 'tailgate');
+    m.add(0, 0.98, -2.12, 0.45, 0.10, 0.06, chrome[0], chrome[1], chrome[2], 1.0, 'tailgate_handle');
+    // Lanternas traseiras verticais nas quinas da caçamba
+    m.add(-0.98, 0.95, -2.08, 0.16, 0.44, 0.08, tailRed[0], tailRed[1], tailRed[2], 1.0, 'taillight');
+    m.add(0.98, 0.95, -2.08, 0.16, 0.44, 0.08, tailRed[0], tailRed[1], tailRed[2], 1.0, 'taillight');
+    // Para-choque traseiro de aço cromado com degrau embutido
+    m.add(0, 0.46, -2.12, 2.15, 0.28, 0.22, chrome[0], chrome[1], chrome[2], 1.0, 'rear_bumper');
+    m.add(0, 0.48, -2.16, 0.85, 0.12, 0.18, blackTrim[0], blackTrim[1], blackTrim[2], 1.0, 'bumper_step');
+
+    // 8. Adiciona arma montada
+    this.addWeaponToVehicle(m, 'titan', weaponType);
+
     return m.bake(renderer);
   },
 
@@ -1968,6 +2298,7 @@ class Projectile {
     this.isShotgun = (weaponType === 'shotgun' || weaponType === 'dispersora');
     this.weaponType = weaponType;
     this.active = true;
+    this.hasHit = false;
     this.road = road;
 
     // Estado da trajetória relativa à estrada
@@ -1975,9 +2306,22 @@ class Projectile {
     this.lateralOffset = initialOffset;
     this.lateralDriftSpeed = Math.sin(this.spreadAngle) * Math.abs(this.speed);
     this.forwardSpeed = Math.cos(this.spreadAngle) * this.speed;
+
+    // Histórico de posição para detecção contínua de colisão (CCD anti-tunneling)
+    this.prevX = x;
+    this.prevY = y;
+    this.prevZ = z;
+    this.prevRoadZ = z;
+    this.prevLateralOffset = initialOffset;
   }
 
   update(dt) {
+    this.prevX = this.x;
+    this.prevY = this.y;
+    this.prevZ = this.z;
+    this.prevRoadZ = this.roadZ;
+    this.prevLateralOffset = this.lateralOffset;
+
     if (this.road) {
       this.roadZ += this.forwardSpeed * dt;
       this.lateralOffset += this.lateralDriftSpeed * dt;
@@ -2022,68 +2366,106 @@ class WeaponSystem {
     }
   }
 
+  // Função unificada para computar qualquer ponto ao longo da trajetória no espaço 3D da pista
+  computeTrajectoryPoint(originZ, initialOffset, spreadAngle, originY, distance, road) {
+    const z = originZ + distance * Math.cos(spreadAngle);
+    const lateralOffset = initialOffset + distance * Math.sin(spreadAngle);
+    const curveCenter = road ? road.getCurveX(z) : 0;
+    const x = curveCenter + lateralOffset;
+    return { x, y: originY, z, lateralOffset };
+  }
+
   // Obtenção unificada das trajetórias reais de disparo (compartilhado entre projéteis e linhas de mira)
   getTrajectories(weaponKey, playerX, playerY, playerZ, roadAngle, options = {}) {
     const cfg = PLAYER_WEAPONS[weaponKey] || PLAYER_WEAPONS.machinegun;
     const trajectories = [];
     const road = this.game.road;
 
+    const vType = (this.game.player ? this.game.player.type : 'interceptor');
+
+    // Coordenadas locais (X, Y, Z) das bocas de saída de cada arma na geometria voxel do veículo
+    const WEAPON_OFFSETS = {
+      interceptor: {
+        machinegun: { fenderX: 0.74, fenderY: 0.58, fenderZ: 1.96 },
+        shotgun:    { x: 0.0, y: 0.44, z: 2.39 },
+        cannon:     { x: 0.0, y: 1.08, z: 2.01 }
+      },
+      raptor: {
+        machinegun: { fenderX: 0.82, fenderY: 0.48, fenderZ: 2.00 },
+        shotgun:    { x: 0.0, y: 0.36, z: 2.43 },
+        cannon:     { x: 0.0, y: 0.95, z: 1.90 }
+      },
+      titan: {
+        machinegun: { fenderX: 0.98, fenderY: 0.96, fenderZ: 2.12 },
+        shotgun:    { x: 0.0, y: 0.74, z: 2.70 },
+        cannon:     { x: 0.0, y: 1.74, z: 2.39 }
+      }
+    };
+    const vOffsets = WEAPON_OFFSETS[vType] || WEAPON_OFFSETS.interceptor;
+
+    const cosA = Math.cos(roadAngle);
+    const sinA = Math.sin(roadAngle);
+
+    // Converte ponto local (lx, ly, lz) para coordenadas do mundo considerando rotação e posição do veículo
+    const calcWorldPos = (lx, ly, lz) => {
+      const wx = playerX + lx * cosA + lz * sinA;
+      const wy = playerY + ly;
+      const wz = playerZ - lx * sinA + lz * cosA;
+      const curveCenter = road ? road.getCurveX(wz) : 0;
+      const baseOffset = wx - curveCenter;
+      return { x: wx, y: wy, z: wz, initialOffset: baseOffset };
+    };
+
     if (weaponKey === 'shotgun') {
-      // Dispersora: EXATAMENTE 3 projéteis com spread concentrado
+      // Dispersora: Boca do canhão frontal com 3 projéteis/linhas em leque
+      const pTip = calcWorldPos(vOffsets.shotgun.x, vOffsets.shotgun.y, vOffsets.shotgun.z);
       const spreadAngles = cfg.spreadAngles || [-0.045, 0.0, 0.045];
-      const originX = playerX;
-      const originY = playerY + 0.6;
-      const originZ = playerZ + 1.2;
-      const curveCenter = road ? road.getCurveX(originZ) : 0;
-      const baseOffset = originX - curveCenter;
 
       for (const sp of spreadAngles) {
         trajectories.push({
-          originX: originX,
-          originY: originY,
-          originZ: originZ,
-          initialOffset: baseOffset,
+          originX: pTip.x,
+          originY: pTip.y,
+          originZ: pTip.z,
+          initialOffset: pTip.initialOffset,
           spreadAngle: sp,
           speed: cfg.speed,
           range: cfg.range,
           color: cfg.color,
           size: cfg.size,
-          isCannon: false
+          isCannon: false,
+          weaponType: 'shotgun'
         });
       }
 
     } else if (weaponKey === 'cannon') {
-      // Canhão Pesado: 1 projétil central de alto calibre
-      const originX = playerX;
-      const originY = playerY + 0.8;
-      const originZ = playerZ + 1.8;
-      const curveCenter = road ? road.getCurveX(originZ) : 0;
-      const baseOffset = originX - curveCenter;
+      // Canhão Pesado: Boca do canhão montado no topo da cabine
+      const pTip = calcWorldPos(vOffsets.cannon.x, vOffsets.cannon.y, vOffsets.cannon.z);
 
       trajectories.push({
-        originX: originX,
-        originY: originY,
-        originZ: originZ,
-        initialOffset: baseOffset,
+        originX: pTip.x,
+        originY: pTip.y,
+        originZ: pTip.z,
+        initialOffset: pTip.initialOffset,
         spreadAngle: 0,
         speed: cfg.speed,
         range: cfg.range,
         color: cfg.color,
         size: cfg.size,
-        isCannon: true
+        isCannon: true,
+        weaponType: 'cannon'
       });
 
     } else {
-      // Metralhadora: canos esquerdo e direito com muzzles dedicados
+      // Metralhadora: Paralamas dianteiros esquerdo e direito
       const { keyQ = false, keyE = false, forAim = false, sideAlternator = false } = options;
+
+      const pLeft = calcWorldPos(vOffsets.machinegun.fenderX, vOffsets.machinegun.fenderY, vOffsets.machinegun.fenderZ);
+      const pRight = calcWorldPos(-vOffsets.machinegun.fenderX, vOffsets.machinegun.fenderY, vOffsets.machinegun.fenderZ);
 
       let includeLeft = false;
       let includeRight = false;
 
       if (forAim) {
-        // Na mira: se estiver segurando Q exclusivo (apenas esquerdo), mostra linha esquerda;
-        // se estiver segurando E exclusivo (apenas direito), mostra linha direita;
-        // se ambos ou nenhum estiverem pressionados, mostra as DUAS linhas simultaneamente
         if (keyQ && !keyE) {
           includeLeft = true;
         } else if (keyE && !keyQ) {
@@ -2093,7 +2475,6 @@ class WeaponSystem {
           includeRight = true;
         }
       } else {
-        // No disparo real
         if (keyQ && keyE) {
           includeLeft = true;
           includeRight = true;
@@ -2108,18 +2489,11 @@ class WeaponSystem {
       }
 
       if (includeLeft) {
-        const leftOffset = 1.4;
-        const lx = playerX + Math.cos(roadAngle) * leftOffset;
-        const ly = playerY + 0.5;
-        const lz = playerZ - Math.sin(roadAngle) * leftOffset + 1.2;
-        const curveCenter = road ? road.getCurveX(lz) : 0;
-        const baseOffset = lx - curveCenter;
-
         trajectories.push({
-          originX: lx,
-          originY: ly,
-          originZ: lz,
-          initialOffset: baseOffset,
+          originX: pLeft.x,
+          originY: pLeft.y,
+          originZ: pLeft.z,
+          initialOffset: pLeft.initialOffset,
           spreadAngle: 0,
           speed: cfg.speed,
           range: cfg.range,
@@ -2127,23 +2501,17 @@ class WeaponSystem {
           size: cfg.size,
           isCannon: false,
           isLeft: true,
-          isRight: false
+          isRight: false,
+          weaponType: 'machinegun'
         });
       }
 
       if (includeRight) {
-        const rightOffset = -1.4;
-        const rx = playerX + Math.cos(roadAngle) * rightOffset;
-        const ry = playerY + 0.5;
-        const rz = playerZ - Math.sin(roadAngle) * rightOffset + 1.2;
-        const curveCenter = road ? road.getCurveX(rz) : 0;
-        const baseOffset = rx - curveCenter;
-
         trajectories.push({
-          originX: rx,
-          originY: ry,
-          originZ: rz,
-          initialOffset: baseOffset,
+          originX: pRight.x,
+          originY: pRight.y,
+          originZ: pRight.z,
+          initialOffset: pRight.initialOffset,
           spreadAngle: 0,
           speed: cfg.speed,
           range: cfg.range,
@@ -2151,11 +2519,11 @@ class WeaponSystem {
           size: cfg.size,
           isCannon: false,
           isLeft: false,
-          isRight: true
+          isRight: true,
+          weaponType: 'machinegun'
         });
       }
     }
-
     return trajectories;
   }
 
@@ -2339,35 +2707,31 @@ class WeaponSystem {
       );
 
       const cfg = PLAYER_WEAPONS[activeWeapon] || PLAYER_WEAPONS.machinegun;
-      const aimLen = Math.min(cfg.range || 70.0, 70.0);
-      const thickness = 0.055;
-      const alpha = 0.50; // 50% de transparência: visível, discreto e translúcido
-      const steps = 14;   // Segmentos conectados suavemente ao longo da curva real da pista
+      const aimLen = Math.min(cfg.range || 70.0, activeWeapon === 'cannon' ? 85.0 : (activeWeapon === 'shotgun' ? 65.0 : 75.0));
+      const steps = 16;   // Segmentos conectados suavemente ao longo da curva real da pista
 
       // Desenha cada trajetória como uma linha contínua que acompanha perfeitamente a curva da pista
       for (const traj of aimTrajectories) {
+        // Cor unificada: herda diretamente a mesma cor do projétil da arma em PLAYER_WEAPONS
+        const color = traj.color || cfg.color;
+        const thickness = traj.isCannon ? 0.065 : 0.050;
+        const isSideSpread = Math.abs(traj.spreadAngle) > 0.001;
+        // Transparência: centro mais nítido e laterais suaves para a Dispersora não poluir a tela
+        const alpha = isSideSpread ? 0.40 : 0.55;
+
         for (let i = 0; i < steps; i++) {
           const s0 = (i / steps) * aimLen;
           const s1 = ((i + 1) / steps) * aimLen;
 
-          const z0 = traj.originZ + s0 * Math.cos(traj.spreadAngle);
-          const z1 = traj.originZ + s1 * Math.cos(traj.spreadAngle);
-
-          const off0 = traj.initialOffset + s0 * Math.sin(traj.spreadAngle);
-          const off1 = traj.initialOffset + s1 * Math.sin(traj.spreadAngle);
-
-          const x0 = road.getCurveX(z0) + off0;
-          const x1 = road.getCurveX(z1) + off1;
-
-          const y0 = traj.originY;
-          const y1 = traj.originY;
+          const p0 = this.computeTrajectoryPoint(traj.originZ, traj.initialOffset, traj.spreadAngle, traj.originY, s0, road);
+          const p1 = this.computeTrajectoryPoint(traj.originZ, traj.initialOffset, traj.spreadAngle, traj.originY, s1, road);
 
           VoxelBuilder.addContinuousBeam(
             verts,
-            x0, y0, z0,
-            x1, y1, z1,
+            p0.x, p0.y, p0.z,
+            p1.x, p1.y, p1.z,
             thickness,
-            1.0, 0.05, 0.05, alpha
+            color[0], color[1], color[2], alpha
           );
         }
       }
@@ -2485,7 +2849,10 @@ class PlayerVehicle {
     if (this.destroyed) return;
 
     if (this.hitFlash > 0) this.hitFlash -= dt;
-    if (this.shieldTimer > 0) this.shieldTimer -= dt;
+    if (this.shieldTimer > 0) {
+      this.shieldTimer -= dt;
+      if (this.shieldTimer < 0) this.shieldTimer = 0;
+    }
     if (this.rapidFireTimer > 0) this.rapidFireTimer -= dt;
     if (this.doubleDamageTimer > 0) this.doubleDamageTimer -= dt;
     if (this.recoilZ < 0) this.recoilZ = Math.min(0, this.recoilZ + dt * 4.0);
@@ -2540,7 +2907,7 @@ class PlayerVehicle {
     Math3D.rotateY(m, m, angle);
     Math3D.rotateZ(m, m, this.tiltRoll);
 
-    const modelObj = this.game.models[this.type];
+    const modelObj = this.game.getPlayerModel(this.type, this.game.selectedWeapon);
     const tint = (this.hitFlash > 0) ? [1.0, 0.2, 0.2, 0.6] :
                  (this.shieldTimer > 0) ? [0.2, 0.85, 1.0, 0.4] : null;
 
@@ -3118,9 +3485,23 @@ class Game {
 
     // Modelos 3D Procedurais Voxel Pré-Bakeados
     this.models = {
-      interceptor: VoxelBuilder.buildInterceptor(this.renderer),
-      raptor: VoxelBuilder.buildRaptorPlayer(this.renderer),
-      titan: VoxelBuilder.buildTitanPlayer(this.renderer),
+      // Veículos Base
+      interceptor: VoxelBuilder.buildInterceptor(this.renderer, 'machinegun'),
+      raptor: VoxelBuilder.buildRaptorPlayer(this.renderer, 'machinegun'),
+      titan: VoxelBuilder.buildTitanPlayer(this.renderer, 'machinegun'),
+
+      // Variantes dos Veículos com Armas Montadas
+      interceptor_machinegun: VoxelBuilder.buildInterceptor(this.renderer, 'machinegun'),
+      interceptor_shotgun: VoxelBuilder.buildInterceptor(this.renderer, 'shotgun'),
+      interceptor_cannon: VoxelBuilder.buildInterceptor(this.renderer, 'cannon'),
+
+      raptor_machinegun: VoxelBuilder.buildRaptorPlayer(this.renderer, 'machinegun'),
+      raptor_shotgun: VoxelBuilder.buildRaptorPlayer(this.renderer, 'shotgun'),
+      raptor_cannon: VoxelBuilder.buildRaptorPlayer(this.renderer, 'cannon'),
+
+      titan_machinegun: VoxelBuilder.buildTitanPlayer(this.renderer, 'machinegun'),
+      titan_shotgun: VoxelBuilder.buildTitanPlayer(this.renderer, 'shotgun'),
+      titan_cannon: VoxelBuilder.buildTitanPlayer(this.renderer, 'cannon'),
 
       // Inimigos detalhados
       enemy_raptor: VoxelBuilder.buildEnemyRaptor(this.renderer),
@@ -3241,6 +3622,11 @@ class Game {
       // Q e E para canos esquerdo/direito da metralhadora
       if (e.code === 'KeyQ') this.inputs.keyQ = true;
       if (e.code === 'KeyE') this.inputs.keyE = true;
+
+      // Teclas 1, 2 e 3 para trocar de arma instantaneamente (inclusive durante a partida)
+      if (e.code === 'Digit1') this.setWeapon('machinegun');
+      if (e.code === 'Digit2') this.setWeapon('shotgun');
+      if (e.code === 'Digit3') this.setWeapon('cannon');
     });
 
     window.addEventListener('keyup', (e) => {
@@ -3320,6 +3706,7 @@ class Game {
         vCards.forEach(c => c.classList.remove('selected'));
         card.classList.add('selected');
         this.selectedVehicle = card.getAttribute('data-vehicle');
+        this.updateSelectionDetails();
       });
     });
 
@@ -3328,9 +3715,8 @@ class Game {
     wCards.forEach(card => {
       card.addEventListener('click', () => {
         this.sound.playClick();
-        wCards.forEach(c => c.classList.remove('selected'));
-        card.classList.add('selected');
-        this.selectedWeapon = card.getAttribute('data-weapon');
+        const wKey = card.getAttribute('data-weapon');
+        this.setWeapon(wKey);
       });
     });
 
@@ -3406,6 +3792,74 @@ class Game {
         this.debris.maxParticles = 600;
       }
     });
+
+    // Inicializa detalhes da seleção
+    this.updateSelectionDetails();
+  }
+
+  // Retorna o modelo 3D correspondente à combinação de veículo e arma equipada
+  getPlayerModel(vehicleKey, weaponKey) {
+    const vKey = vehicleKey || this.selectedVehicle || 'interceptor';
+    const wKey = weaponKey || this.selectedWeapon || 'machinegun';
+    const combinedKey = `${vKey}_${wKey}`;
+    return this.models[combinedKey] || this.models[vKey] || this.models.interceptor;
+  }
+
+  // Troca de arma unificada com sincronização instantânea de modelo, mira e UI
+  setWeapon(weaponKey) {
+    if (!PLAYER_WEAPONS[weaponKey]) return;
+    this.selectedWeapon = weaponKey;
+    const wCards = document.querySelectorAll('#weapon-cards .selection-card');
+    wCards.forEach(c => {
+      if (c.getAttribute('data-weapon') === weaponKey) {
+        c.classList.add('selected');
+      } else {
+        c.classList.remove('selected');
+      }
+    });
+    this.updateSelectionDetails();
+  }
+
+  // Atualiza em tempo real as informações visuais, nome, atributos e arma do veículo selecionado
+  updateSelectionDetails() {
+    const vKey = this.selectedVehicle || 'interceptor';
+    const wKey = this.selectedWeapon || 'machinegun';
+    const data = VEHICLE_DATA[vKey] || VEHICLE_DATA.interceptor;
+
+    const nameEl = document.getElementById('info-name');
+    if (nameEl) nameEl.textContent = data.displayName;
+
+    const refEl = document.getElementById('info-model-ref');
+    if (refEl) refEl.textContent = data.modelRef;
+
+    const descEl = document.getElementById('info-description');
+    if (descEl) descEl.textContent = data.description;
+
+    const badgeEl = document.getElementById('info-badge');
+    if (badgeEl) {
+      badgeEl.textContent = data.badge;
+      badgeEl.className = `card-badge ${data.badgeClass}`;
+    }
+
+    const speedFill = document.getElementById('stat-speed-fill');
+    if (speedFill) speedFill.style.width = data.speedPct;
+
+    const agilityFill = document.getElementById('stat-agility-fill');
+    if (agilityFill) agilityFill.style.width = data.agilityPct;
+
+    const armorFill = document.getElementById('stat-armor-fill');
+    if (armorFill) armorFill.style.width = data.armorPct;
+
+    const weaponNameEl = document.getElementById('info-weapon-name');
+    if (weaponNameEl) {
+      const wCfg = PLAYER_WEAPONS[wKey] || PLAYER_WEAPONS.machinegun;
+      weaponNameEl.textContent = wCfg.name.toUpperCase();
+    }
+
+    const weaponDescEl = document.getElementById('info-weapon-desc');
+    if (weaponDescEl && data.weaponNotes) {
+      weaponDescEl.textContent = data.weaponNotes[wKey] || '';
+    }
   }
 
   bindRangeSlider(inputId, labelId, callback) {
@@ -3431,6 +3885,13 @@ class Game {
       hud.classList.remove('hidden');
     } else if (screenId !== 'screen-pause') {
       hud.classList.add('hidden');
+    }
+
+    if (screenId === 'screen-select') {
+      this.state = 'SELECT';
+      this.updateSelectionDetails();
+    } else if (screenId === 'screen-main-menu') {
+      this.state = 'MENU';
     }
   }
 
@@ -3493,8 +3954,10 @@ class Game {
   resetHUD() {
     document.getElementById('hud-hp-text').textContent = '1000 / 1000';
     document.getElementById('hud-hp-fill').style.width = '100%';
-    document.getElementById('hud-shield-fill').style.width = '0%';
-    document.getElementById('hud-shield-badge').classList.add('hidden');
+    const shieldFill = document.getElementById('hud-shield-fill');
+    if (shieldFill) shieldFill.style.width = '0%';
+    const shieldBadge = document.getElementById('hud-shield-badge');
+    if (shieldBadge) shieldBadge.classList.add('hidden');
 
     document.getElementById('hud-score').textContent = '0';
     document.getElementById('hud-distance').textContent = '0 m';
@@ -3634,24 +4097,140 @@ class Game {
     // 1. Projéteis do Jogador contra Inimigos
     for (let i = this.weapons.projectiles.length - 1; i >= 0; i--) {
       const proj = this.weapons.projectiles[i];
-      if (!proj.isPlayer) continue;
+      if (!proj.isPlayer || !proj.active || proj.hasHit) continue;
+
+      const isCannon = (proj.isCannon || proj.weaponType === 'cannon' || proj.weaponType === 'canhao');
+      const projHalf = isCannon ? Math.max(0.48, proj.size * 0.6) : (proj.size || 0.35) * 0.5;
 
       for (const e of this.enemies.enemies) {
         if (e.destroyed) continue;
+
+        // O centro vertical real do modelo inimigo no mundo 3D
+        const enemyCenterY = e.worldY + e.config.height * 0.5;
+        const halfW = e.config.width * 0.55 + projHalf;
+        const halfH = e.config.height * 0.55 + projHalf;
+        const halfD = e.config.depth * 0.55 + projHalf;
+
+        let hit = false;
+        let hitX = proj.x;
+        let hitY = proj.y;
+        let hitZ = proj.z;
+
+        // A. Teste AABB pontual na posição atual do projétil
         const dx = Math.abs(proj.x - e.worldX);
-        const dy = Math.abs(proj.y - e.worldY);
+        const dy = Math.abs(proj.y - enemyCenterY);
         const dz = Math.abs(proj.z - e.worldZ);
 
-        if (dx < e.config.width * 0.55 && dy < e.config.height * 0.7 && dz < e.config.depth * 0.55) {
-          e.takeDamage(proj.damage);
-          this.debris.spawnHitSparks(proj.x, proj.y, proj.z, 8);
+        if (dx <= halfW && dy <= halfH && dz <= halfD) {
+          hit = true;
+        }
+
+        // B. Verificação Contínua de Colisão 3D (Segment-AABB CCD) contra tunneling
+        if (!hit) {
+          const p0x = proj.prevX - e.worldX;
+          const p0y = proj.prevY - enemyCenterY;
+          const p0z = proj.prevZ - e.worldZ;
+          const p1x = proj.x - e.worldX;
+          const p1y = proj.y - enemyCenterY;
+          const p1z = proj.z - e.worldZ;
+
+          const segDx = p1x - p0x;
+          const segDy = p1y - p0y;
+          const segDz = p1z - p0z;
+
+          let tMin = 0.0;
+          let tMax = 1.0;
+          let intersects = true;
+
+          // Eixo X
+          if (Math.abs(segDx) < 1e-6) {
+            if (p0x < -halfW || p0x > halfW) intersects = false;
+          } else {
+            const inv = 1.0 / segDx;
+            let t1 = (-halfW - p0x) * inv;
+            let t2 = (halfW - p0x) * inv;
+            if (t1 > t2) { const tmp = t1; t1 = t2; t2 = tmp; }
+            tMin = Math.max(tMin, t1);
+            tMax = Math.min(tMax, t2);
+            if (tMin > tMax) intersects = false;
+          }
+
+          // Eixo Y
+          if (intersects) {
+            if (Math.abs(segDy) < 1e-6) {
+              if (p0y < -halfH || p0y > halfH) intersects = false;
+            } else {
+              const inv = 1.0 / segDy;
+              let t1 = (-halfH - p0y) * inv;
+              let t2 = (halfH - p0y) * inv;
+              if (t1 > t2) { const tmp = t1; t1 = t2; t2 = tmp; }
+              tMin = Math.max(tMin, t1);
+              tMax = Math.min(tMax, t2);
+              if (tMin > tMax) intersects = false;
+            }
+          }
+
+          // Eixo Z
+          if (intersects) {
+            if (Math.abs(segDz) < 1e-6) {
+              if (p0z < -halfD || p0z > halfD) intersects = false;
+            } else {
+              const inv = 1.0 / segDz;
+              let t1 = (-halfD - p0z) * inv;
+              let t2 = (halfD - p0z) * inv;
+              if (t1 > t2) { const tmp = t1; t1 = t2; t2 = tmp; }
+              tMin = Math.max(tMin, t1);
+              tMax = Math.min(tMax, t2);
+              if (tMin > tMax) intersects = false;
+            }
+          }
+
+          if (intersects && tMin <= 1.0 && tMax >= 0.0) {
+            hit = true;
+            const hitT = Math.max(0.0, Math.min(1.0, tMin));
+            hitX = proj.prevX + (proj.x - proj.prevX) * hitT;
+            hitY = proj.prevY + (proj.y - proj.prevY) * hitT;
+            hitZ = proj.prevZ + (proj.z - proj.prevZ) * hitT;
+          }
+        }
+
+        // C. Verificação contínua no referencial de curvatura da pista (Road-space CCD)
+        if (!hit && proj.road && dy <= halfH) {
+          const zStart = Math.min(proj.prevRoadZ, proj.roadZ);
+          const zEnd = Math.max(proj.prevRoadZ, proj.roadZ);
+          const eMinZ = e.worldZ - halfD;
+          const eMaxZ = e.worldZ + halfD;
+
+          if (zEnd >= eMinZ && zStart <= eMaxZ) {
+            let projLat = proj.lateralOffset;
+            if (Math.abs(proj.roadZ - proj.prevRoadZ) > 1e-4) {
+              const frac = Math.max(0, Math.min(1, (e.worldZ - proj.prevRoadZ) / (proj.roadZ - proj.prevRoadZ)));
+              projLat = proj.prevLateralOffset + (proj.lateralOffset - proj.prevLateralOffset) * frac;
+            }
+            if (Math.abs(projLat - e.laneX) <= halfW) {
+              hit = true;
+              hitX = e.worldX;
+              hitY = proj.y;
+              hitZ = e.worldZ;
+            }
+          }
+        }
+
+        if (hit) {
+          proj.hasHit = true;
           proj.active = false;
+          e.takeDamage(proj.damage);
+          const sparkCount = isCannon ? 14 : 8;
+          this.debris.spawnHitSparks(hitX, hitY, hitZ, sparkCount);
+          if (isCannon) {
+            this.camera.addShake(0.18);
+          }
           break;
         }
       }
 
       // Projéteis contra Obstáculos
-      if (proj.active) {
+      if (proj.active && !proj.hasHit) {
         for (const o of this.obstacles.obstacles) {
           if (o.destroyed) continue;
           const curveCenter = this.road.getCurveX(o.worldZ);
@@ -3663,6 +4242,7 @@ class Game {
             o.destroyed = true;
             this.sound.playExplosion(false);
             this.debris.spawnHitSparks(obsX, 0.6, o.worldZ, 12);
+            proj.hasHit = true;
             proj.active = false;
             break;
           }
@@ -3734,12 +4314,12 @@ class Game {
       hpFill.style.width = `${Math.max(0, (this.player.hp / this.player.maxHp) * 100)}%`;
     }
 
-    if (this.player.shieldTimer > 0) {
-      shieldBadge.classList.remove('hidden');
-      shieldFill.style.width = `${(this.player.shieldTimer / 3.0) * 100}%`;
+    if (this.player && this.player.shieldTimer > 0) {
+      if (shieldBadge) shieldBadge.classList.remove('hidden');
+      if (shieldFill) shieldFill.style.width = `${Math.min(100, Math.max(0, (this.player.shieldTimer / 3.0) * 100))}%`;
     } else {
-      shieldBadge.classList.add('hidden');
-      shieldFill.style.width = '0%';
+      if (shieldBadge) shieldBadge.classList.add('hidden');
+      if (shieldFill) shieldFill.style.width = '0%';
     }
 
     // Sistema de Pontuação Unificado: Pontuação Total e Distância em Metros/KM
@@ -3886,25 +4466,30 @@ class Game {
       this.debris.render(this.renderer);
 
     } else if (this.state === 'MENU' || this.state === 'SELECT') {
-      // Modo Showroom 3D no Menu
+      // Modo Showroom 3D no Menu e Tela de Seleção
       this.menuPreviewAngle += dt * 0.9;
+      const isSelect = (this.state === 'SELECT');
+      const camDist = isSelect ? 5.2 : 6.5;
+      const camHeight = isSelect ? 2.2 : 3.0;
+      const targetY = isSelect ? 0.45 : 0.4;
+
       const previewCam = {
-        eye: [Math.sin(this.menuPreviewAngle) * 6.5, 3.0, Math.cos(this.menuPreviewAngle) * 6.5],
-        target: [0, 0.4, 0],
+        eye: [Math.sin(this.menuPreviewAngle) * camDist, camHeight, Math.cos(this.menuPreviewAngle) * camDist],
+        target: [0, targetY, 0],
         up: [0, 1, 0]
       };
 
       this.renderer.beginFrame(previewCam);
 
       const floorMat = Math3D.createMat4();
-      Math3D.translateMat4(floorMat, floorMat, [0, -0.1, 0]);
-      Math3D.scaleMat4(floorMat, floorMat, [1.5, 1, 1.5]);
+      Math3D.translateMat4(floorMat, floorMat, [0, -0.05, 0]);
+      Math3D.scaleMat4(floorMat, floorMat, [1.6, 1, 1.6]);
       this.renderer.drawMesh(this.road.roadMesh, floorMat);
 
       const m = Math3D.createMat4();
-      Math3D.translateMat4(m, m, [0, 0.5 + Math.sin(this.menuPreviewAngle * 3) * 0.08, 0]);
-      const activeModelKey = this.selectedVehicle || 'interceptor';
-      this.renderer.drawMesh(this.models[activeModelKey].mesh, m);
+      Math3D.translateMat4(m, m, [0, 0.46 + Math.sin(this.menuPreviewAngle * 3) * 0.04, 0]);
+      const modelToDraw = this.getPlayerModel(this.selectedVehicle, this.selectedWeapon);
+      this.renderer.drawMesh(modelToDraw.mesh, m);
 
     } else if (this.state === 'GAMEOVER') {
       this.debris.update(dt);

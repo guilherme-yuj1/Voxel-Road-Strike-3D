@@ -128,227 +128,160 @@
 
     <!-- TELA DE PREPARAÇÃO: SELEÇÃO DE VEÍCULO, ARMA E MAPA -->
     <div id="screen-select" class="screen hidden">
-      <div class="select-container">
-        <h2 class="section-heading">PREPARAÇÃO DE COMBATE</h2>
+      <div class="select-showroom-overlay">
+        
+        <!-- Topo: Título da Preparação -->
+        <header class="select-header">
+          <div class="select-header-title">PREPARAÇÃO DE COMBATE</div>
+          <div class="select-header-sub">SELECIONE SEU VEÍCULO E CONFIGURAÇÕES DE MISSÃO</div>
+        </header>
 
-        <!-- Etapa 1: Escolha do Veículo -->
-        <div class="selection-section">
-          <h3 class="step-title">1. ESCOLHA SEU VEÍCULO</h3>
-          <div class="cards-grid" id="vehicle-cards">
-            <!-- Interceptor -->
-            <div class="selection-card selected" data-vehicle="interceptor">
-              <div class="card-badge badge-bal">EQUILIBRADO</div>
-              <h4 class="card-title">INTERCEPTOR</h4>
-              <div class="card-stats">
+        <!-- Área Principal em 3 Colunas: Esquerda (Seleção) | Centro (3D Livre) | Direita (Especificações) -->
+        <main class="select-main-layout">
+          <!-- Coluna Lateral Esquerda: Opções e Navegação -->
+          <aside class="select-sidebar-left">
+            <!-- 1. Veículos -->
+            <div class="sidebar-section">
+              <h3 class="sidebar-section-title">1. VEÍCULO</h3>
+              <div class="cards-grid-vertical" id="vehicle-cards">
+                <!-- Infiltrador -->
+                <div class="selection-card selected" data-vehicle="interceptor">
+                  <div class="card-badge badge-bal">CLÁSSICO</div>
+                  <h4 class="card-title">INFILTRADOR</h4>
+                  <p class="card-sub">Aston Martin DB5</p>
+                </div>
+
+                <!-- Veloz -->
+                <div class="selection-card" data-vehicle="raptor">
+                  <div class="card-badge badge-spd">SUPERCARRO</div>
+                  <h4 class="card-title">VELOZ</h4>
+                  <p class="card-sub">Lamborghini Aventador</p>
+                </div>
+
+                <!-- Titan -->
+                <div class="selection-card" data-vehicle="titan">
+                  <div class="card-badge badge-arm">PICAPE</div>
+                  <h4 class="card-title">TITAN</h4>
+                  <p class="card-sub">Ford F-150</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Armas -->
+            <div class="sidebar-section">
+              <h3 class="sidebar-section-title">2. ARMA</h3>
+              <div class="cards-grid-compact" id="weapon-cards">
+                <!-- Metralhadora -->
+                <div class="selection-card selected" data-weapon="machinegun">
+                  <h4 class="card-title">METRALHADORA</h4>
+                  <span class="card-sub">Automática</span>
+                </div>
+
+                <!-- Dispersora -->
+                <div class="selection-card" data-weapon="shotgun">
+                  <h4 class="card-title">DISPERSORA</h4>
+                  <span class="card-sub">Shotgun 3x</span>
+                </div>
+
+                <!-- Canhão Pesado -->
+                <div class="selection-card" data-weapon="cannon">
+                  <h4 class="card-title">CANHÃO PESADO</h4>
+                  <span class="card-sub">Alto Impacto</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Mapas -->
+            <div class="sidebar-section">
+              <h3 class="sidebar-section-title">3. MAPA</h3>
+              <div class="cards-grid-compact" id="map-cards">
+                <!-- Deserto -->
+                <div class="selection-card selected" data-map="desert">
+                  <h4 class="card-title">DESERTO</h4>
+                </div>
+
+                <!-- Floresta Nevada -->
+                <div class="selection-card" data-map="snow">
+                  <h4 class="card-title">NEVE</h4>
+                </div>
+
+                <!-- Japão Rural -->
+                <div class="selection-card" data-map="japan_rural">
+                  <h4 class="card-title">JAPÃO</h4>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Centro: Viewport Desobstruído para o Veículo 3D -->
+          <div class="select-center-viewport">
+            <div class="viewport-vehicle-indicator">
+              <span class="indicator-ring"></span>
+              <span class="indicator-text">SHOWROOM 3D EM TEMPO REAL</span>
+            </div>
+          </div>
+
+          <!-- Coluna Lateral Direita: Informações e Estatísticas -->
+          <aside class="select-sidebar-right">
+            <div class="vehicle-info-card">
+              <div class="info-header">
+                <span id="info-badge" class="card-badge badge-bal">ESPORTIVO CLÁSSICO</span>
+                <h3 id="info-name" class="info-vehicle-name">INFILTRADOR</h3>
+                <div id="info-model-ref" class="info-vehicle-ref">Inspirado no Aston Martin DB5 prateado</div>
+              </div>
+
+              <!-- Descrição Textual Oficial Conforme Prompt -->
+              <div class="info-desc-box">
+                <p id="info-description">Esportivo clássico prateado, inspirado no Aston Martin DB5.</p>
+              </div>
+
+              <!-- Atributos Reais do Veículo -->
+              <div class="info-stats-group">
+                <h4 class="stats-group-title">ESPECIFICAÇÕES DO VEÍCULO</h4>
+                
                 <div class="stat-row">
                   <span>HP Máximo:</span>
-                  <strong>1000</strong>
+                  <strong id="stat-hp">1000</strong>
                 </div>
+
                 <div class="stat-row">
                   <span>Velocidade:</span>
                   <div class="stat-bar">
-                    <div style="width: 70%;"></div>
+                    <div id="stat-speed-fill" style="width: 70%;"></div>
                   </div>
                 </div>
+
                 <div class="stat-row">
                   <span>Agilidade:</span>
                   <div class="stat-bar">
-                    <div style="width: 75%;"></div>
+                    <div id="stat-agility-fill" style="width: 75%;"></div>
                   </div>
                 </div>
-              </div>
-              <p class="card-desc">Chassi versátil com asas delta e propulsores duplos. Condução estável em qualquer
-                situação.</p>
-            </div>
 
-            <!-- Raptor -->
-            <div class="selection-card" data-vehicle="raptor">
-              <div class="card-badge badge-spd">VELOZ & ÁGIL</div>
-              <h4 class="card-title">RAPTOR</h4>
-              <div class="card-stats">
-                <div class="stat-row">
-                  <span>HP Máximo:</span>
-                  <strong>1000</strong>
-                </div>
-                <div class="stat-row">
-                  <span>Velocidade:</span>
-                  <div class="stat-bar">
-                    <div style="width: 95%;"></div>
-                  </div>
-                </div>
-                <div class="stat-row">
-                  <span>Agilidade:</span>
-                  <div class="stat-bar">
-                    <div style="width: 95%;"></div>
-                  </div>
-                </div>
-              </div>
-              <p class="card-desc">Focado em alta aceleração e reflexos instantâneos. Condução rápida e agressiva.</p>
-            </div>
-
-            <!-- Titan -->
-            <div class="selection-card" data-vehicle="titan">
-              <div class="card-badge badge-arm">BLINDADO PESADO</div>
-              <h4 class="card-title">TITAN</h4>
-              <div class="card-stats">
-                <div class="stat-row">
-                  <span>HP Máximo:</span>
-                  <strong>1000</strong>
-                </div>
-                <div class="stat-row">
-                  <span>Velocidade:</span>
-                  <div class="stat-bar">
-                    <div style="width: 55%;"></div>
-                  </div>
-                </div>
                 <div class="stat-row">
                   <span>Blindagem:</span>
                   <div class="stat-bar">
-                    <div style="width: 95%;"></div>
+                    <div id="stat-armor-fill" style="width: 60%;"></div>
                   </div>
                 </div>
               </div>
-              <p class="card-desc">Fortaleza blindada com absorção superior de choque e estabilidade contra colisões
-                diretas.</p>
-            </div>
-          </div>
-        </div>
 
-        <!-- Etapa 2: Escolha da Arma -->
-        <div class="selection-section">
-          <h3 class="step-title">2. ESCOLHA SUA ARMA</h3>
-          <div class="cards-grid" id="weapon-cards">
-            <!-- Metralhadora -->
-            <div class="selection-card selected" data-weapon="machinegun">
-              <div class="card-badge badge-bal">AUTOMÁTICA</div>
-              <h4 class="card-title">METRALHADORA</h4>
-              <div class="card-stats">
-                <div class="stat-row">
-                  <span>Dano por Tiro:</span>
-                  <strong>20</strong>
-                </div>
-                <div class="stat-row">
-                  <span>Cadência:</span>
-                  <strong>8 tiros / seg</strong>
-                </div>
-                <div class="stat-row">
-                  <span>Controle Lateral:</span>
-                  <strong>Q (Esq) / E (Dir)</strong>
-                </div>
+              <!-- Informação da Arma Instalada -->
+              <div class="info-weapon-box">
+                <div class="weapon-mount-tag">MONTAGEM DO ARMAMENTO</div>
+                <div id="info-weapon-name" class="weapon-mount-name">METRALHADORA DUPLA</div>
+                <div id="info-weapon-desc" class="weapon-mount-desc">Duas metralhadoras embutidas nos paralamas dianteiros.</div>
               </div>
-              <p class="card-desc">Disparos contínuos e velozes ao segurar ESPAÇO. Controle exclusivo de canos via
-                teclas Q e E.</p>
             </div>
+          </aside>
+        </main>
 
-            <!-- Dispersora -->
-            <div class="selection-card" data-weapon="shotgun">
-              <div class="card-badge badge-spd">SHOTGUN 3X</div>
-              <h4 class="card-title">DISPERSORA</h4>
-              <div class="card-stats">
-                <div class="stat-row">
-                  <span>Dano:</span>
-                  <strong>50 x 3 (150 max)</strong>
-                </div>
-                <div class="stat-row">
-                  <span>Projéteis:</span>
-                  <strong>Exatamente 3</strong>
-                </div>
-                <div class="stat-row">
-                  <span>Dispersão:</span>
-                  <strong>Leque Fechado</strong>
-                </div>
-              </div>
-              <p class="card-desc">Dispara exatamente 3 projéteis concentrados em ângulos previsíveis. Alto impacto e
-                alcance estendido.</p>
-            </div>
-
-            <!-- Canhão Pesado -->
-            <div class="selection-card" data-weapon="cannon">
-              <div class="card-badge badge-arm">ALTO IMPACTO</div>
-              <h4 class="card-title">CANHÃO PESADO</h4>
-              <div class="card-stats">
-                <div class="stat-row">
-                  <span>Dano por Tiro:</span>
-                  <strong>150</strong>
-                </div>
-                <div class="stat-row">
-                  <span>Cadência:</span>
-                  <strong>Lenta & Poderosa</strong>
-                </div>
-                <div class="stat-row">
-                  <span>Efeito:</span>
-                  <strong>Grande Explosão</strong>
-                </div>
-              </div>
-              <p class="card-desc">Projéteis maciços de alto calibre com grande impacto visual, estrondo grave e
-                destruição fulminante.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Etapa 3: Escolha do Mapa -->
-        <div class="selection-section">
-          <h3 class="step-title">3. ESCOLHA O MAPA</h3>
-          <div class="cards-grid" id="map-cards">
-            <!-- Deserto -->
-            <div class="selection-card selected" data-map="desert">
-              <div class="card-badge badge-bal">CALOR & AREIA</div>
-              <h4 class="card-title">DESERTO</h4>
-              <div class="card-stats">
-                <div class="stat-row">
-                  <span>Clima:</span>
-                  <strong>Ensolarado / Árido</strong>
-                </div>
-                <div class="stat-row">
-                  <span>Obstáculos:</span>
-                  <strong>Pedras, Barreiras, Destroços</strong>
-                </div>
-              </div>
-              <p class="card-desc">Dunas douradas, cânions rochosos e cactos sob iluminação quente e atmosférica.</p>
-            </div>
-
-            <!-- Floresta Nevada -->
-            <div class="selection-card" data-map="snow">
-              <div class="card-badge badge-spd">INVERNO & NEVE</div>
-              <h4 class="card-title">FLORESTA NEVADA</h4>
-              <div class="card-stats">
-                <div class="stat-row">
-                  <span>Clima:</span>
-                  <strong>Nevasca / Gelado</strong>
-                </div>
-                <div class="stat-row">
-                  <span>Obstáculos:</span>
-                  <strong>Toras, Pedras Nevadas, Gelo</strong>
-                </div>
-              </div>
-              <p class="card-desc">Pinheiros cobertos de neve, picos montanhosos gélidos e flocos caindo pelo ar.</p>
-            </div>
-
-            <!-- Japão Rural -->
-            <div class="selection-card" data-map="japan_rural">
-              <div class="card-badge badge-arm">TRADICIONAL</div>
-              <h4 class="card-title">JAPÃO RURAL</h4>
-              <div class="card-stats">
-                <div class="stat-row">
-                  <span>Clima:</span>
-                  <strong>Névoa Suave / Sakura</strong>
-                </div>
-                <div class="stat-row">
-                  <span>Obstáculos:</span>
-                  <strong>Lanternas, Cercas, Toras</strong>
-                </div>
-              </div>
-              <p class="card-desc">Casas tradicionais minka, portais Torii vermelhos, cerejeiras floridas, arrozais e
-                colinas serenas.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Botões de Ação -->
-        <div class="select-actions">
+        <!-- Barra Inferior: Ações e Confirmação -->
+        <footer class="select-footer">
           <button id="btn-select-back" class="btn btn-secondary">VOLTAR</button>
           <button id="btn-start-game" class="btn btn-primary btn-glow btn-large">INICIAR MISSÃO</button>
-        </div>
+        </footer>
+
       </div>
     </div>
 

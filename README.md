@@ -19,9 +19,9 @@ Jogo completo de combate veicular arcade 3D construído em **WebGL nativo com Ja
 
 ## 🔫 Armas
 
-1. **Metralhadora:** 8 disparos por segundo, 20 de dano por tiro. Controle de canos esquerdo/direito pelas teclas Q e E.
-2. **Dispersora:** Exatamente 3 projéteis concentrados por disparo, 50 de dano por projétil, alcance moderado e trajetórias previsíveis.
-3. **Canhão Pesado:** 150 de dano por tiro, projétil maciço com grande impacto, trepidação de câmera e explosão concussiva.
+1. **Metralhadora:** 8 disparos por segundo, 60 de dano por tiro, 330m de alcance efetivo. Controle de canos esquerdo/direito pelas teclas Q e E.
+2. **Dispersora:** Exatamente 3 projéteis concentrados por disparo, 150 de dano por projétil (450 máx), 184m de alcance e trajetórias previsíveis.
+3. **Canhão Pesado:** 450 de dano por tiro, 440m de alcance, projétil maciço com grande impacto, trepidação de câmera e explosão concussiva.
 
 ---
 
