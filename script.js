@@ -664,17 +664,17 @@ const VoxelBuilder = {
 
     const faces = [
       // Topo (+Y)
-      { norm: [0, 1, 0], quad: [ p03, p02, p12, p03, p12, p13 ] },
+      { norm: [0, 1, 0], quad: [p03, p02, p12, p03, p12, p13] },
       // Base (-Y)
-      { norm: [0, -1, 0], quad: [ p00, p10, p11, p00, p11, p01 ] },
+      { norm: [0, -1, 0], quad: [p00, p10, p11, p00, p11, p01] },
       // Lado Direito (+R)
-      { norm: [rx, 0, rz], quad: [ p01, p11, p12, p01, p12, p02 ] },
+      { norm: [rx, 0, rz], quad: [p01, p11, p12, p01, p12, p02] },
       // Lado Esquerdo (-R)
-      { norm: [-rx, 0, -rz], quad: [ p00, p03, p13, p00, p13, p10 ] },
+      { norm: [-rx, 0, -rz], quad: [p00, p03, p13, p00, p13, p10] },
       // Frente (Extremidade P1)
-      { norm: [ux, uy, uz], quad: [ p10, p13, p12, p10, p12, p11 ] },
+      { norm: [ux, uy, uz], quad: [p10, p13, p12, p10, p12, p11] },
       // Trás (Extremidade P0)
-      { norm: [-ux, -uy, -uz], quad: [ p00, p01, p02, p00, p02, p03 ] }
+      { norm: [-ux, -uy, -uz], quad: [p00, p01, p02, p00, p02, p03] }
     ];
 
     for (let f = 0; f < 6; f++) {
@@ -714,17 +714,17 @@ const VoxelBuilder = {
 
     const faces = [
       // Frente (+Z local)
-      { norm: normFront, quad: [ p001, p101, p111, p001, p111, p011 ] },
+      { norm: normFront, quad: [p001, p101, p111, p001, p111, p011] },
       // Trás (-Z local)
-      { norm: normBack, quad: [ p100, p000, p010, p100, p010, p110 ] },
+      { norm: normBack, quad: [p100, p000, p010, p100, p010, p110] },
       // Topo (+Y)
-      { norm: [0, 1, 0], quad: [ p011, p111, p110, p011, p110, p010 ] },
+      { norm: [0, 1, 0], quad: [p011, p111, p110, p011, p110, p010] },
       // Base (-Y)
-      { norm: [0, -1, 0], quad: [ p000, p100, p101, p000, p101, p001 ] },
+      { norm: [0, -1, 0], quad: [p000, p100, p101, p000, p101, p001] },
       // Direita (+X local)
-      { norm: normRight, quad: [ p101, p100, p110, p101, p110, p111 ] },
+      { norm: normRight, quad: [p101, p100, p110, p101, p110, p111] },
       // Esquerda (-X local)
-      { norm: normLeft, quad: [ p000, p001, p011, p000, p011, p010 ] }
+      { norm: normLeft, quad: [p000, p001, p011, p000, p011, p010] }
     ];
 
     for (let f = 0; f < 6; f++) {
@@ -794,17 +794,17 @@ const VoxelBuilder = {
 
     const faces = [
       // Frente (+Z)
-      { norm: [0, 0, 1], quad: [ [x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y0, z1], [x1, y1, z1], [x0, y1, z1] ] },
+      { norm: [0, 0, 1], quad: [[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y0, z1], [x1, y1, z1], [x0, y1, z1]] },
       // Trás (-Z)
-      { norm: [0, 0, -1], quad: [ [x1, y0, z0], [x0, y0, z0], [x0, y1, z0], [x1, y0, z0], [x0, y1, z0], [x1, y1, z0] ] },
+      { norm: [0, 0, -1], quad: [[x1, y0, z0], [x0, y0, z0], [x0, y1, z0], [x1, y0, z0], [x0, y1, z0], [x1, y1, z0]] },
       // Topo (+Y)
-      { norm: [0, 1, 0], quad: [ [x0, y1, z1], [x1, y1, z1], [x1, y1, z0], [x0, y1, z1], [x1, y1, z0], [x0, y1, z0] ] },
+      { norm: [0, 1, 0], quad: [[x0, y1, z1], [x1, y1, z1], [x1, y1, z0], [x0, y1, z1], [x1, y1, z0], [x0, y1, z0]] },
       // Base (-Y)
-      { norm: [0, -1, 0], quad: [ [x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z0], [x1, y0, z1], [x0, y0, z1] ] },
+      { norm: [0, -1, 0], quad: [[x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z0], [x1, y0, z1], [x0, y0, z1]] },
       // Direita (+X)
-      { norm: [1, 0, 0], quad: [ [x1, y0, z1], [x1, y0, z0], [x1, y1, z0], [x1, y0, z1], [x1, y1, z0], [x1, y1, z1] ] },
+      { norm: [1, 0, 0], quad: [[x1, y0, z1], [x1, y0, z0], [x1, y1, z0], [x1, y0, z1], [x1, y1, z0], [x1, y1, z1]] },
       // Esquerda (-X)
-      { norm: [-1, 0, 0], quad: [ [x0, y0, z0], [x0, y0, z1], [x0, y1, z1], [x0, y0, z0], [x0, y1, z1], [x0, y1, z0] ] }
+      { norm: [-1, 0, 0], quad: [[x0, y0, z0], [x0, y0, z1], [x0, y1, z1], [x0, y0, z0], [x0, y1, z1], [x0, y1, z0]] }
     ];
 
     for (let f = 0; f < 6; f++) {
@@ -956,7 +956,7 @@ const VoxelBuilder = {
   // Infiltrador: Esportivo clássico prateado inspirado no Aston Martin DB5
   buildInterceptor(renderer, weaponType = 'machinegun') {
     const m = this.createModelDef();
-    
+
     // Cores Aston Martin DB5 Silver Birch
     const silver = [0.77, 0.80, 0.83];
     const silverHighlight = [0.85, 0.88, 0.91];
@@ -2387,18 +2387,18 @@ class WeaponSystem {
     const WEAPON_OFFSETS = {
       interceptor: {
         machinegun: { fenderX: 0.74, fenderY: 0.58, fenderZ: 1.96 },
-        shotgun:    { x: 0.0, y: 0.44, z: 2.39 },
-        cannon:     { x: 0.0, y: 1.08, z: 2.01 }
+        shotgun: { x: 0.0, y: 0.44, z: 2.39 },
+        cannon: { x: 0.0, y: 1.08, z: 2.01 }
       },
       raptor: {
         machinegun: { fenderX: 0.82, fenderY: 0.48, fenderZ: 2.00 },
-        shotgun:    { x: 0.0, y: 0.36, z: 2.43 },
-        cannon:     { x: 0.0, y: 0.95, z: 1.90 }
+        shotgun: { x: 0.0, y: 0.36, z: 2.43 },
+        cannon: { x: 0.0, y: 0.95, z: 1.90 }
       },
       titan: {
         machinegun: { fenderX: 0.98, fenderY: 0.96, fenderZ: 2.12 },
-        shotgun:    { x: 0.0, y: 0.74, z: 2.70 },
-        cannon:     { x: 0.0, y: 1.74, z: 2.39 }
+        shotgun: { x: 0.0, y: 0.74, z: 2.70 },
+        cannon: { x: 0.0, y: 1.74, z: 2.39 }
       }
     };
     const vOffsets = WEAPON_OFFSETS[vType] || WEAPON_OFFSETS.interceptor;
@@ -2909,7 +2909,7 @@ class PlayerVehicle {
 
     const modelObj = this.game.getPlayerModel(this.type, this.game.selectedWeapon);
     const tint = (this.hitFlash > 0) ? [1.0, 0.2, 0.2, 0.6] :
-                 (this.shieldTimer > 0) ? [0.2, 0.85, 1.0, 0.4] : null;
+      (this.shieldTimer > 0) ? [0.2, 0.85, 1.0, 0.4] : null;
 
     renderer.drawMesh(modelObj.mesh, m, tint);
 
@@ -3092,6 +3092,15 @@ class EnemyVehicle {
 const ABSOLUTE_MAX_ACTIVE_ENEMIES = 7;
 const INITIAL_MAX_ACTIVE_ENEMIES = 3;
 
+// Parâmetros de Gerenciamento Espacial e Combate
+const ENEMY_COMBAT_REAR_RANGE = 38.0;      // Inimigos até 38m atrás ainda estão disputando ultrapassagem
+const ENEMY_CULLING_BEHIND_DIST = 48.0;    // Distância a partir da qual o inimigo ultrapassado é removido
+const ENEMY_CULLING_AHEAD_DIST = 260.0;    // Limite de segurança se o inimigo se afastar muito à frente
+const ENEMY_MIN_SPAWN_AHEAD = 110.0;       // Distância mínima à frente para surgimento
+const ENEMY_SPAWN_WINDOW = 45.0;           // Janela de variação longitudinal para spawn
+const ENEMY_MIN_LANE_SPACING = 26.0;       // Espaçamento longitudinal mínimo na mesma faixa
+const ENEMY_MIN_CROSS_SPACING = 14.0;      // Espaçamento mínimo entre faixas adjacentes
+
 class EnemyManager {
   constructor(game) {
     this.game = game;
@@ -3122,32 +3131,87 @@ class EnemyManager {
     return this.getActiveEnemyCount() < this.getMaxActiveEnemies();
   }
 
-  update(dt, player) {
-    this.spawnTimer -= dt;
-    if (this.spawnTimer <= 0) {
-      if (this.canSpawnEnemy()) {
-        // Distribui o spawn gradualmente ao longo do tempo (sem spawnar em bloco)
-        this.spawnTimer = Math.max(1.8, 3.8 - (this.game.wave * 0.2));
-        this.spawnNextWaveEnemy(player.worldZ);
-      } else {
-        // Limite atingido: aguarda breve intervalo sem instanciar veículos extras
-        this.spawnTimer = 0.8;
-      }
-    }
+  // Calcula a distância longitudinal relativa do inimigo em relação ao jogador ao longo da fita da pista.
+  // Positivo = Inimigo à frente na estrada; Negativo = Jogador ultrapassou o inimigo.
+  getRelativeDistanceZ(enemy, player) {
+    if (!enemy || !player) return 0;
+    return enemy.worldZ - player.worldZ;
+  }
 
+  // Verifica se o inimigo foi ultrapassado e se ainda permanece na zona de combate imediato
+  isEnemyInRearCombat(enemy, player) {
+    const distZ = this.getRelativeDistanceZ(enemy, player);
+    return (distZ < 0 && distZ >= -ENEMY_COMBAT_REAR_RANGE);
+  }
+
+  // Verifica se o inimigo foi ultrapassado e já ficou suficientemente para trás para ser removido
+  isEnemyBehindAndOutOfCombat(enemy, player) {
+    const distZ = this.getRelativeDistanceZ(enemy, player);
+    return distZ < -ENEMY_CULLING_BEHIND_DIST;
+  }
+
+  // Verifica se o inimigo ficou excessivamente distante à frente do jogador
+  isEnemyTooFarAhead(enemy, player) {
+    const distZ = this.getRelativeDistanceZ(enemy, player);
+    return distZ > ENEMY_CULLING_AHEAD_DIST;
+  }
+
+  // Remoção limpa por ultrapassagem ou distância (SEM pontuação, SEM notificações, SEM som de morte)
+  despawnEnemy(enemy, index) {
+    if (typeof index === 'number' && index >= 0 && index < this.enemies.length) {
+      this.enemies.splice(index, 1);
+    } else {
+      const idx = this.enemies.indexOf(enemy);
+      if (idx !== -1) this.enemies.splice(idx, 1);
+    }
+    // Marca como inativo/destruído para liberar recursos e anular colisões/renderizações residuais
+    enemy.destroyed = true;
+  }
+
+  update(dt, player) {
+    // 1. Atualiza e gerencia o ciclo de vida de cada inimigo ativo
     for (let i = this.enemies.length - 1; i >= 0; i--) {
       const e = this.enemies[i];
       e.update(dt, player);
 
-      // Remove apenas se destruído ou se ultrapassou o limite muito além à frente
-      if (e.destroyed || (e.worldZ - player.worldZ > 320.0)) {
+      // SITUAÇÃO 1: Inimigo eliminado pelo jogador (HP zerou no combate)
+      if (e.destroyed) {
+        // e.onKilled() já foi acionado em takeDamage() com pontuação, som e 5 notificações sequenciais
         this.enemies.splice(i, 1);
+        continue;
+      }
+
+      // SITUAÇÃO 2: Inimigo ultrapassado pelo jogador que ficou para trás fora da zona de combate
+      if (this.isEnemyBehindAndOutOfCombat(e, player)) {
+        // Remoção limpa sem conceder pontos nem notificações
+        this.despawnEnemy(e, i);
+        continue;
+      }
+
+      // Inimigo muito à frente além da visibilidade
+      if (this.isEnemyTooFarAhead(e, player)) {
+        this.despawnEnemy(e, i);
+        continue;
+      }
+
+      // SITUAÇÃO 3: Inimigo continua ativo no combate (à frente ou na perseguição traseira imediata)
+    }
+
+    // 2. Geração contínua de novos inimigos à frente respeitando o limite
+    this.spawnTimer -= dt;
+    if (this.spawnTimer <= 0) {
+      if (this.canSpawnEnemy()) {
+        this.spawnTimer = Math.max(1.8, 3.6 - (this.game.wave * 0.2));
+        this.spawnNextWaveEnemy(player.worldZ);
+      } else {
+        // Limite atingido: aguarda breve intervalo sem instanciar veículos extras
+        this.spawnTimer = 0.6;
       }
     }
   }
 
   spawnNextWaveEnemy(playerZ) {
-    // Verificação estrita antes de instanciar
+    // Verificação estrita antes de instanciar: nunca ultrapassa o limite
     if (!this.canSpawnEnemy()) return null;
 
     const truckChance = Math.min(0.55, 0.15 + (this.game.wave - 1) * 0.08);
@@ -3162,19 +3226,71 @@ class EnemyManager {
       else type = 'titan';
     }
 
-    // Distância mínima e espaçamento entre veículos para evitar carros colados
+    // Faixas jogáveis permitidas dentro dos limites físicos da estrada
     const lanes = [-7.0, -2.5, 2.5, 7.0];
-    let chosenLane = lanes[Math.floor(Math.random() * lanes.length)];
-    let spawnZ = playerZ + 115.0 + Math.random() * 45.0;
+    // Embaralha as faixas para não viciar na mesma pista
+    const shuffledLanes = lanes.slice().sort(() => Math.random() - 0.5);
 
-    // Garante espaço longitudinal seguro de pelo menos 20m em relação a outros carros
-    for (const e of this.enemies) {
-      if (!e.destroyed && Math.abs(e.worldZ - spawnZ) < 20.0) {
-        spawnZ = e.worldZ + 25.0 + Math.random() * 12.0;
+    // Novo inimigo surge SEMPRE à frente do jogador, em distância segura
+    let bestSpawnZ = playerZ + ENEMY_MIN_SPAWN_AHEAD + Math.random() * ENEMY_SPAWN_WINDOW;
+    let chosenLane = shuffledLanes[0];
+    let laneFound = false;
+
+    // Procura uma faixa e posição Z livre de outros inimigos e obstáculos
+    const obstacles = (this.game.obstacles && this.game.obstacles.obstacles) ? this.game.obstacles.obstacles : [];
+
+    for (const testLane of shuffledLanes) {
+      let candidateZ = bestSpawnZ;
+      let hasConflict = false;
+
+      // Verifica conflito com outros veículos inimigos ativos
+      for (const e of this.enemies) {
+        if (e.destroyed) continue;
+        const diffZ = Math.abs(e.worldZ - candidateZ);
+        const sameLane = Math.abs(e.laneX - testLane) < 2.0;
+
+        if (sameLane && diffZ < ENEMY_MIN_LANE_SPACING) {
+          hasConflict = true;
+          break;
+        } else if (diffZ < ENEMY_MIN_CROSS_SPACING) {
+          hasConflict = true;
+          break;
+        }
+      }
+
+      // Verifica conflito com obstáculos físicos da pista
+      if (!hasConflict) {
+        for (const obs of obstacles) {
+          if (obs.destroyed) continue;
+          const diffObsZ = Math.abs(obs.worldZ - candidateZ);
+          const sameObsLane = Math.abs(obs.laneX - testLane) < 2.2;
+          if (sameObsLane && diffObsZ < 18.0) {
+            hasConflict = true;
+            break;
+          }
+        }
+      }
+
+      if (!hasConflict) {
+        chosenLane = testLane;
+        bestSpawnZ = candidateZ;
+        laneFound = true;
+        break;
       }
     }
 
-    const enemy = new EnemyVehicle(this.game, type, spawnZ, chosenLane);
+    // Se todas as faixas tinham tráfego ou obstáculos imediatos, empurra para frente
+    if (!laneFound) {
+      bestSpawnZ += 24.0 + Math.random() * 12.0;
+      chosenLane = shuffledLanes[0];
+    }
+
+    // Garante terminantemente que o ponto de surgimento está à frente do jogador
+    if (bestSpawnZ < playerZ + 80.0) {
+      bestSpawnZ = playerZ + ENEMY_MIN_SPAWN_AHEAD;
+    }
+
+    const enemy = new EnemyVehicle(this.game, type, bestSpawnZ, chosenLane);
     this.enemies.push(enemy);
     return enemy;
   }
@@ -3323,7 +3439,19 @@ class FloatingTextManager {
   constructor(game) {
     this.game = game;
     this.items = [];
+    this.pendingSequences = [];
     this.container = document.getElementById('floating-texts-container');
+  }
+
+  // Divisão matemática rigorosa da pontuação em 5 partes com resto distribuído
+  static calculateScoreSplits(totalScore, count = 5) {
+    const base = Math.floor(totalScore / count);
+    const remainder = totalScore % count;
+    const parts = [];
+    for (let i = 0; i < count; i++) {
+      parts.push(base + (i < remainder ? 1 : 0));
+    }
+    return parts;
   }
 
   spawn(worldX, worldY, worldZ, text, styleClass = 'damage') {
@@ -3339,18 +3467,62 @@ class FloatingTextManager {
     });
   }
 
+  // Agenda cinco notificações visuais sequenciais com intervalo fluido (180ms)
+  spawnKillScoreSequence(totalScore, worldX, worldY, worldZ) {
+    const count = 5;
+    const parts = FloatingTextManager.calculateScoreSplits(totalScore, count);
+    const interval = 0.18; // 180ms entre cada notificação (faixa 150ms-250ms)
+
+    for (let i = 0; i < count; i++) {
+      this.pendingSequences.push({
+        delay: i * interval,
+        x: worldX,
+        y: worldY + 1.2,
+        z: worldZ,
+        // Leve alternância lateral e vertical para máxima legibilidade sem sobreposição estática
+        offsetX: (i % 2 === 0 ? -0.18 : 0.18) * (i > 0 ? 1 : 0),
+        offsetY: i * 0.15,
+        text: `+${parts[i]}`,
+        className: 'score'
+      });
+    }
+  }
+
   clear() {
     this.items = [];
+    this.pendingSequences = [];
     if (this.container) this.container.innerHTML = '';
   }
 
   update(dt) {
+    // 1. Processa sequências pendentes sincronizadas com o tempo de jogo (pausam e retomam com o jogo)
+    for (let i = this.pendingSequences.length - 1; i >= 0; i--) {
+      const seq = this.pendingSequences[i];
+      seq.delay -= dt;
+      if (seq.delay <= 0) {
+        this.spawn(
+          seq.x + (seq.offsetX || 0),
+          seq.y + (seq.offsetY || 0),
+          seq.z,
+          seq.text,
+          seq.className
+        );
+        this.pendingSequences.splice(i, 1);
+      }
+    }
+
+    // 2. Renderização de textos visuais projetados
     if (!this.container) return;
     this.container.innerHTML = '';
 
     const width = this.game.canvas.width;
     const height = this.game.canvas.height;
     const vp = this.game.renderer.matViewProj;
+
+    // Limite máximo de textos simultâneos para evitar sobrecarga visual em combate intenso
+    if (this.items.length > 40) {
+      this.items.splice(0, this.items.length - 40);
+    }
 
     for (let i = this.items.length - 1; i >= 0; i--) {
       const item = this.items[i];
@@ -3414,7 +3586,7 @@ const HighScores = {
   clear() {
     try {
       localStorage.removeItem(this.STORAGE_KEY);
-    } catch {}
+    } catch { }
   }
 };
 
@@ -3889,9 +4061,11 @@ class Game {
 
     if (screenId === 'screen-select') {
       this.state = 'SELECT';
+      if (this.floatingTexts) this.floatingTexts.clear();
       this.updateSelectionDetails();
     } else if (screenId === 'screen-main-menu') {
       this.state = 'MENU';
+      if (this.floatingTexts) this.floatingTexts.clear();
     }
   }
 
@@ -4043,9 +4217,8 @@ class Game {
     const addedScore = basePts * this.combo;
     this.score += addedScore;
 
-    // Floating Score Points (+600, +1200)
-    const comboTag = this.combo > 1 ? ` (x${this.combo})` : '';
-    this.floatingTexts.spawn(worldX, worldY + 1.2, worldZ, `+${addedScore}${comboTag}`, 'score');
+    // 5 Notificações Visuais Sequenciais de Pontuação por Eliminação
+    this.floatingTexts.spawnKillScoreSequence(addedScore, worldX, worldY, worldZ);
 
     this.combo = Math.min(10, this.combo + 1);
     this.maxCombo = Math.max(this.maxCombo, this.combo);
